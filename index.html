@@ -416,10 +416,17 @@
 
             const DEAD_ADDRESS = "DJAskJgeZ3apWWGcpDyWxxZM7fMDFkpZ53";
             
-            // APIs to try in order
-            const APIs = [
-                `https://dogechain.info/api/v1/address/balance/${DEAD_ADDRESS}`,
-                `https://chain.so/api/v2/get_address_balance/DOGE/${DEAD_ADDRESS}`
+            const PROVIDERS = [
+                {
+                    name: "BlockCypher",
+                    url: `https://api.blockcypher.com/v1/doge/main/addrs/${DEAD_ADDRESS}/balance`,
+                    parse: (data) => data.final_balance / 100000000
+                },
+                {
+                    name: "Chain.so",
+                    url: `https://chain.so/api/v2/get_address_balance/DOGE/${DEAD_ADDRESS}`,
+                    parse: (data) => parseFloat(data.data.confirmed_balance)
+                }
             ];
 
             // --- Copy Functionality ---
@@ -451,28 +458,26 @@
 
             // --- Live Balance Fetching ---
             async function fetchBalance() {
-                try {
-                    // Try Dogechain.info first
-                    const response = await fetch(`https://dogechain.info/chain/Dogecoin/q/addressbalance/${DEAD_ADDRESS}`);
-                    if (response.ok) {
-                        const text = await response.text();
-                        if (!isNaN(parseFloat(text))) {
-                            updateDisplay(parseFloat(text));
-                            return;
-                        }
-                    }
-                    throw new Error("Primary API failed");
-                } catch (e) {
-                    console.warn("Primary API failed, trying backup...", e);
+                // Iterate through providers until one works
+                for (const provider of PROVIDERS) {
                     try {
-                        // Fallback mechanism could go here if needed, 
-                        // but sticking to simple plain text API for now as it's most robust for CORS usually.
-                        statusText.innerText = "Network Error (Retrying...)";
-                        statusDot.classList.remove('live');
-                    } catch (err) {
-                        console.error("All APIs failed", err);
+                        const response = await fetch(provider.url);
+                        if (response.ok) {
+                            const data = await response.json();
+                            const balance = provider.parse(data);
+                            if (!isNaN(balance)) {
+                                updateDisplay(balance);
+                                return; // Success, exit function
+                            }
+                        }
+                    } catch (e) {
+                        console.warn(`${provider.name} failed:`, e);
                     }
                 }
+
+                // If loop finishes, all providers failed
+                statusText.innerText = "Network Error (Retrying...)";
+                statusDot.classList.remove('live');
             }
 
             function updateDisplay(balance) {
