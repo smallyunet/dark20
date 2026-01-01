@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +33,9 @@
         }
 
         /* Typography */
-        h1, h2, h3 {
+        h1,
+        h2,
+        h3 {
             font-weight: normal;
             letter-spacing: -0.05em;
             text-transform: uppercase;
@@ -47,7 +50,9 @@
         .glitch {
             position: relative;
         }
-        .glitch::before, .glitch::after {
+
+        .glitch::before,
+        .glitch::after {
             content: attr(data-text);
             position: absolute;
             top: 0;
@@ -56,12 +61,14 @@
             height: 100%;
             background: var(--bg-color);
         }
+
         .glitch::before {
             left: 2px;
             text-shadow: -1px 0 #ff00c1;
             clip: rect(44px, 450px, 56px, 0);
             animation: glitch-anim-1 5s infinite linear alternate-reverse;
         }
+
         .glitch::after {
             left: -2px;
             text-shadow: -1px 0 #00fff9;
@@ -70,20 +77,55 @@
         }
 
         @keyframes glitch-anim-1 {
-            0% { clip: rect(30px, 9999px, 10px, 0); }
-            5% { clip: rect(70px, 9999px, 90px, 0); }
-            10% { clip: rect(20px, 9999px, 60px, 0); }
-            15% { clip: rect(80px, 9999px, 40px, 0); }
-            20% { clip: rect(10px, 9999px, 100px, 0); }
-            to { clip: rect(0, 0, 0, 0); }
+            0% {
+                clip: rect(30px, 9999px, 10px, 0);
+            }
+
+            5% {
+                clip: rect(70px, 9999px, 90px, 0);
+            }
+
+            10% {
+                clip: rect(20px, 9999px, 60px, 0);
+            }
+
+            15% {
+                clip: rect(80px, 9999px, 40px, 0);
+            }
+
+            20% {
+                clip: rect(10px, 9999px, 100px, 0);
+            }
+
+            to {
+                clip: rect(0, 0, 0, 0);
+            }
         }
+
         @keyframes glitch-anim-2 {
-            0% { clip: rect(10px, 9999px, 80px, 0); }
-            5% { clip: rect(90px, 9999px, 10px, 0); }
-            10% { clip: rect(50px, 9999px, 20px, 0); }
-            15% { clip: rect(30px, 9999px, 70px, 0); }
-            20% { clip: rect(60px, 9999px, 50px, 0); }
-            to { clip: rect(0, 0, 0, 0); }
+            0% {
+                clip: rect(10px, 9999px, 80px, 0);
+            }
+
+            5% {
+                clip: rect(90px, 9999px, 10px, 0);
+            }
+
+            10% {
+                clip: rect(50px, 9999px, 20px, 0);
+            }
+
+            15% {
+                clip: rect(30px, 9999px, 70px, 0);
+            }
+
+            20% {
+                clip: rect(60px, 9999px, 50px, 0);
+            }
+
+            to {
+                clip: rect(0, 0, 0, 0);
+            }
         }
 
         p {
@@ -144,7 +186,7 @@
             margin-top: 2rem;
             transition: border-color 0.3s;
         }
-        
+
         .tagline:hover {
             border-color: var(--text-color);
         }
@@ -157,13 +199,16 @@
             background: #000;
             border-radius: 50%;
             position: relative;
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
         }
-        
+
         .visual-void::before {
             content: '';
             position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
             background: linear-gradient(45deg, #111, #333, #000);
             border-radius: 50%;
             z-index: -1;
@@ -175,12 +220,15 @@
         .visual-void::after {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: radial-gradient(circle at 30% 30%, #222 0%, #000 60%);
             border-radius: 50%;
             opacity: 0.9;
         }
-        
+
         /* Event Horizon Effect */
         .event-horizon {
             position: absolute;
@@ -190,18 +238,30 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             animation: spin 20s linear infinite;
         }
 
         @keyframes pulse-glow {
-            0% { filter: blur(10px); opacity: 0.5; }
-            100% { filter: blur(20px); opacity: 0.2; }
+            0% {
+                filter: blur(10px);
+                opacity: 0.5;
+            }
+
+            100% {
+                filter: blur(20px);
+                opacity: 0.2;
+            }
         }
 
         @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
         }
 
         /* Manifesto */
@@ -231,7 +291,7 @@
             color: white;
             font-weight: bold;
         }
-        
+
         .highlight {
             color: #ccc;
         }
@@ -261,7 +321,7 @@
         .burn-address:hover {
             border-color: #777;
             background: #111;
-            box-shadow: 0 0 15px rgba(255,255,255,0.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
         }
 
         .copy-btn {
@@ -287,7 +347,7 @@
             color: var(--dim-color);
             font-size: 0.9rem;
         }
-        
+
         .balance-value {
             color: var(--text-color);
             font-size: 1.5rem;
@@ -295,7 +355,7 @@
             margin: 0.5rem 0;
             font-weight: bold;
         }
-        
+
         .status-dot {
             height: 8px;
             width: 8px;
@@ -304,7 +364,7 @@
             display: inline-block;
             margin-right: 5px;
         }
-        
+
         .status-dot.live {
             background-color: #00ff00;
             box-shadow: 0 0 5px #00ff00;
@@ -322,10 +382,22 @@
 
         /* Mobile Adjustments */
         @media (max-width: 600px) {
-            .hero h1 { font-size: 3rem; }
-            .container { padding: 1.5rem; }
-            .manifesto { text-align: left; }
-            .burn-address { font-size: 0.85rem; padding: 1rem; }
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            .manifesto {
+                text-align: left;
+            }
+
+            .burn-address {
+                font-size: 0.85rem;
+                padding: 1rem;
+            }
         }
 
         .toast {
@@ -343,28 +415,32 @@
             font-size: 0.8rem;
             z-index: 100;
         }
+
         .toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
+
 <body>
 
     <div class="container hero">
         <h1 class="glitch" data-text="DARK-20">DARK-20</h1>
         <div class="subtitle">THE FINAL PROTOCOL</div>
-        
+
         <div class="visual-void">
             <div class="event-horizon"></div>
         </div>
-        
+
         <div class="tagline">Dogecoin is infinite. Kabosu is not.</div>
     </div>
 
     <section class="container manifesto">
-        <p>According to the Dark-20 whitepaper, true value requires thermodynamic cost. Instead of minting new tokens to clutter the blockchain, we engage in the purest form of consensus: Loss.</p>
-        <p>We utilize the "Unspendable Address" mechanism. No private keys. No withdrawals. Just a one-way bridge to the void.</p>
+        <p>True value requires thermodynamic cost. Instead of minting new tokens to clutter the blockchain, we engage in
+            the purest form of consensus: Loss.</p>
+        <p>We utilize the "Unspendable Address" mechanism. No private keys. No withdrawals. Just a one-way bridge to the
+            void.</p>
     </section>
 
     <section class="container mechanism">
@@ -384,9 +460,10 @@
     <section class="container black-hole">
         <h2>The Black Hole</h2>
         <p style="color: var(--dim-color); font-size: 0.9rem;">Send DOGE to this address to burn it forever.</p>
-        
+
         <div class="burn-address-container">
-            <input type="text" class="burn-address" id="doge-address" value="DJAskJgeZ3apWWGcpDyWxxZM7fMDFkpZ53" readonly title="Click to copy">
+            <input type="text" class="burn-address" id="doge-address" value="DJAskJgeZ3apWWGcpDyWxxZM7fMDFkpZ53"
+                readonly title="Click to copy">
             <button class="copy-btn" id="copy-btn">Copy Address</button>
         </div>
 
@@ -398,7 +475,7 @@
     </section>
 
     <footer>
-        <span class="footer-quote">'Asset generation is bound to verifiable destruction.' — Dark-20 Whitepaper</span>
+        <span class="footer-quote">'Asset generation is bound to verifiable destruction.'</span>
         <br><br>
         Rest In Peace, Kabosu. (2005 - 2024)
     </footer>
@@ -415,7 +492,7 @@
             const statusText = document.getElementById('status-text');
 
             const DEAD_ADDRESS = "DJAskJgeZ3apWWGcpDyWxxZM7fMDFkpZ53";
-            
+
             const PROVIDERS = [
                 {
                     name: "BlockCypher",
@@ -432,7 +509,7 @@
             // --- Copy Functionality ---
             function copyToClipboard() {
                 addressInput.select();
-                addressInput.setSelectionRange(0, 99999); 
+                addressInput.setSelectionRange(0, 99999);
 
                 navigator.clipboard.writeText(addressInput.value).then(() => {
                     showToast();
@@ -496,4 +573,5 @@
         });
     </script>
 </body>
+
 </html>
