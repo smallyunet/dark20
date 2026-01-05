@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DARK-DOGE | The Final Protocol</title>
+    <meta name="description" content="A digital monument to Kabosu. Send Dogecoin to the void - a cryptographically derived, unspendable burn address.">
     <!-- Google Fonts: Space Mono for Cyberpunk aesthetic -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,6 +18,9 @@
             --dim-color: #666666;
             --accent-color: #ffffff;
             --error-color: #ff3333;
+            --glow-cyan: #00fff9;
+            --glow-magenta: #ff00c1;
+            --glow-gold: #ffd700;
             /* Updated Font Stack */
             --font-stack: "Space Mono", "Courier New", monospace;
         }
@@ -29,9 +33,6 @@
 
         body {
             background-color: var(--bg-color);
-            /* Deep Space Gradient for depth */
-            background-image: radial-gradient(circle at 50% 30%, #1a1a1a 0%, #050505 60%);
-            background-attachment: fixed;
             color: var(--text-color);
             font-family: var(--font-stack);
             line-height: 1.6;
@@ -41,12 +42,22 @@
             overflow-x: hidden;
         }
 
+        /* Starfield Canvas Background */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
         /* Typography */
         h1,
         h2,
         h3 {
             font-weight: 700;
-            /* Bolder headers */
             letter-spacing: -0.05em;
             text-transform: uppercase;
         }
@@ -69,75 +80,40 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--bg-color);
-            /* Performance Optimization */
+            background: transparent;
             will-change: clip;
         }
 
         .glitch::before {
             left: 2px;
-            text-shadow: -1px 0 #ff00c1;
+            text-shadow: -1px 0 var(--glow-magenta);
             clip: rect(44px, 450px, 56px, 0);
             animation: glitch-anim-1 5s infinite linear alternate-reverse;
         }
 
         .glitch::after {
             left: -2px;
-            text-shadow: -1px 0 #00fff9;
+            text-shadow: -1px 0 var(--glow-cyan);
             clip: rect(44px, 450px, 56px, 0);
             animation: glitch-anim-2 5s infinite linear alternate-reverse;
         }
 
         @keyframes glitch-anim-1 {
-            0% {
-                clip: rect(30px, 9999px, 10px, 0);
-            }
-
-            5% {
-                clip: rect(70px, 9999px, 90px, 0);
-            }
-
-            10% {
-                clip: rect(20px, 9999px, 60px, 0);
-            }
-
-            15% {
-                clip: rect(80px, 9999px, 40px, 0);
-            }
-
-            20% {
-                clip: rect(10px, 9999px, 100px, 0);
-            }
-
-            to {
-                clip: rect(0, 0, 0, 0);
-            }
+            0% { clip: rect(30px, 9999px, 10px, 0); }
+            5% { clip: rect(70px, 9999px, 90px, 0); }
+            10% { clip: rect(20px, 9999px, 60px, 0); }
+            15% { clip: rect(80px, 9999px, 40px, 0); }
+            20% { clip: rect(10px, 9999px, 100px, 0); }
+            to { clip: rect(0, 0, 0, 0); }
         }
 
         @keyframes glitch-anim-2 {
-            0% {
-                clip: rect(10px, 9999px, 80px, 0);
-            }
-
-            5% {
-                clip: rect(90px, 9999px, 10px, 0);
-            }
-
-            10% {
-                clip: rect(50px, 9999px, 20px, 0);
-            }
-
-            15% {
-                clip: rect(30px, 9999px, 70px, 0);
-            }
-
-            20% {
-                clip: rect(60px, 9999px, 50px, 0);
-            }
-
-            to {
-                clip: rect(0, 0, 0, 0);
-            }
+            0% { clip: rect(10px, 9999px, 80px, 0); }
+            5% { clip: rect(90px, 9999px, 10px, 0); }
+            10% { clip: rect(50px, 9999px, 20px, 0); }
+            15% { clip: rect(30px, 9999px, 70px, 0); }
+            20% { clip: rect(60px, 9999px, 50px, 0); }
+            to { clip: rect(0, 0, 0, 0); }
         }
 
         p {
@@ -203,79 +179,123 @@
             border-color: var(--text-color);
         }
 
-        /* Kabosu Visual - The Void */
-        .visual-void {
-            width: 250px;
-            height: 250px;
+        /* Black Hole Visual Container */
+        .black-hole-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
             margin: 3rem auto;
+        }
+
+        /* Black Hole Canvas for Particles */
+        #blackhole-canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 400px;
+            pointer-events: none;
+        }
+
+        /* Central Void */
+        .visual-void {
+            width: 200px;
+            height: 200px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: #000;
             border-radius: 50%;
-            position: relative;
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            box-shadow: 
+                0 0 60px rgba(0, 0, 0, 1),
+                0 0 100px rgba(0, 0, 0, 0.8),
+                inset 0 0 60px rgba(0, 0, 0, 1);
+            z-index: 2;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
 
-        .visual-void::before {
-            content: '';
+        .visual-void:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        .visual-void:hover .kabosu-silhouette {
+            opacity: 0.6;
+        }
+
+        /* Accretion Disk */
+        .accretion-disk {
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #111, #333, #000);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateX(75deg);
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
-            z-index: -1;
-            filter: blur(10px);
-            opacity: 0.7;
-            animation: pulse-glow 4s infinite alternate;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0deg,
+                rgba(255, 150, 50, 0.3) 60deg,
+                rgba(255, 200, 100, 0.5) 120deg,
+                rgba(255, 100, 50, 0.3) 180deg,
+                transparent 240deg,
+                rgba(255, 150, 50, 0.2) 300deg,
+                transparent 360deg
+            );
+            animation: spin-disk 8s linear infinite;
+            z-index: 1;
+            filter: blur(3px);
         }
 
-        .visual-void::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 30% 30%, #222 0%, #000 60%);
-            border-radius: 50%;
-            opacity: 0.9;
+        @keyframes spin-disk {
+            from { transform: translate(-50%, -50%) rotateX(75deg) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotateX(75deg) rotate(360deg); }
         }
 
-        /* Event Horizon Effect */
+        /* Event Horizon Glow */
         .event-horizon {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            animation: spin 20s linear infinite;
-            /* Performance Optimization */
-            will-change: transform;
+            border: 2px solid rgba(255, 100, 50, 0.3);
+            animation: pulse-horizon 3s ease-in-out infinite;
+            z-index: 1;
         }
 
-        @keyframes pulse-glow {
-            0% {
-                filter: blur(10px);
+        @keyframes pulse-horizon {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(255, 100, 50, 0.3), 0 0 40px rgba(255, 50, 0, 0.1);
                 opacity: 0.5;
             }
-
-            100% {
-                filter: blur(20px);
-                opacity: 0.2;
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 100, 50, 0.5), 0 0 80px rgba(255, 50, 0, 0.2);
+                opacity: 1;
             }
         }
 
-        @keyframes spin {
-            0% {
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
+        /* Kabosu Silhouette */
+        .kabosu-silhouette {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 3;
+        }
 
-            100% {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
+        .kabosu-silhouette svg {
+            width: 100%;
+            height: 100%;
+            fill: rgba(255, 255, 255, 0.15);
         }
 
         /* Manifesto */
@@ -310,6 +330,54 @@
             color: #ccc;
         }
 
+        .entropy-highlight {
+            color: var(--glow-gold);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid #222;
+            padding: 1.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #444;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value.animating {
+            animation: number-pulse 0.5s ease;
+        }
+
+        @keyframes number-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); color: var(--glow-gold); }
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--dim-color);
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+        }
+
         /* Black Hole (Action) */
         .burn-address-container {
             margin: 2rem 0;
@@ -339,7 +407,14 @@
             transform: scale(1.01);
         }
 
-        .copy-btn {
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .copy-btn, .explorer-btn {
             background: transparent;
             border: 1px solid var(--text-color);
             color: var(--text-color);
@@ -350,9 +425,10 @@
             font-size: 0.8rem;
             letter-spacing: 1px;
             transition: all 0.2s;
+            text-decoration: none;
         }
 
-        .copy-btn:hover {
+        .copy-btn:hover, .explorer-btn:hover {
             background: var(--text-color);
             color: var(--bg-color);
         }
@@ -365,10 +441,21 @@
 
         .balance-value {
             color: var(--text-color);
-            font-size: 1.5rem;
+            font-size: 2rem;
             display: block;
             margin: 0.5rem 0;
             font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .balance-value.new-burn {
+            animation: balance-glow 1s ease;
+        }
+
+        @keyframes balance-glow {
+            0% { color: var(--text-color); text-shadow: none; }
+            50% { color: var(--glow-gold); text-shadow: 0 0 30px var(--glow-gold); }
+            100% { color: var(--text-color); text-shadow: none; }
         }
 
         .status-dot {
@@ -383,6 +470,127 @@
         .status-dot.live {
             background-color: #00ff00;
             box-shadow: 0 0 5px #00ff00;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Transaction History */
+        .tx-history {
+            margin-top: 3rem;
+            text-align: left;
+        }
+
+        .tx-history h3 {
+            font-size: 0.9rem;
+            color: var(--dim-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .tx-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #222;
+            background: #080808;
+        }
+
+        .tx-item {
+            padding: 1rem;
+            border-bottom: 1px solid #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        .tx-item:last-child {
+            border-bottom: none;
+        }
+
+        .tx-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tx-item.new-tx {
+            animation: tx-flash 2s ease;
+        }
+
+        @keyframes tx-flash {
+            0% { background: rgba(255, 215, 0, 0.3); }
+            100% { background: transparent; }
+        }
+
+        .tx-amount {
+            color: var(--glow-gold);
+            font-weight: bold;
+        }
+
+        .tx-time {
+            color: var(--dim-color);
+            font-size: 0.75rem;
+        }
+
+        .tx-hash {
+            color: var(--dim-color);
+            font-size: 0.7rem;
+            font-family: monospace;
+        }
+
+        .tx-hash a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .tx-hash a:hover {
+            color: var(--text-color);
+        }
+
+        .tx-message {
+            color: var(--dim-color);
+            font-style: italic;
+            font-size: 0.8rem;
+        }
+
+        /* Verification Section */
+        .verification {
+            text-align: left;
+        }
+
+        .verification pre {
+            background: #080808;
+            padding: 1.5rem;
+            overflow-x: auto;
+            border: 1px solid #222;
+            color: var(--dim-color);
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        .verify-link {
+            color: var(--glow-cyan);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .verify-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Celebration Particles */
+        #celebration-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
         }
 
         /* Footer */
@@ -413,6 +621,39 @@
                 font-size: 0.85rem;
                 padding: 1rem;
             }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .black-hole-container {
+                width: 250px;
+                height: 250px;
+            }
+
+            .visual-void {
+                width: 150px;
+                height: 150px;
+            }
+
+            .accretion-disk {
+                width: 220px;
+                height: 220px;
+            }
+
+            .event-horizon {
+                width: 170px;
+                height: 170px;
+            }
+
+            #blackhole-canvas {
+                width: 300px;
+                height: 300px;
+            }
         }
 
         .toast {
@@ -435,17 +676,50 @@
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
+
+        /* Custom Scrollbar */
+        .tx-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tx-list::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        .tx-list::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+
+        .tx-list::-webkit-scrollbar-thumb:hover {
+            background: #444;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Starfield Background -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Celebration Particles -->
+    <canvas id="celebration-canvas"></canvas>
 
     <div class="container hero">
         <h1 class="glitch" data-text="DARK-DOGE">DARK-DOGE</h1>
         <div class="subtitle">THE FINAL PROTOCOL</div>
 
-        <div class="visual-void">
+        <div class="black-hole-container">
+            <canvas id="blackhole-canvas"></canvas>
+            <div class="accretion-disk"></div>
             <div class="event-horizon"></div>
+            <div class="visual-void">
+                <div class="kabosu-silhouette">
+                    <!-- Simplified Shiba Inu Silhouette -->
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10 C30 10 20 25 18 35 L10 30 L15 45 C12 50 10 60 15 75 C20 90 35 95 50 95 C65 95 80 90 85 75 C90 60 88 50 85 45 L90 30 L82 35 C80 25 70 10 50 10 Z M35 50 C38 50 40 52 40 55 C40 58 38 60 35 60 C32 60 30 58 30 55 C30 52 32 50 35 50 Z M65 50 C68 50 70 52 70 55 C70 58 68 60 65 60 C62 60 60 58 60 55 C60 52 62 50 65 50 Z M50 65 C55 65 58 68 58 70 C58 72 55 75 50 75 C45 75 42 72 42 70 C42 68 45 65 50 65 Z"/>
+                    </svg>
+                </div>
+            </div>
         </div>
 
         <div class="tagline">Dogecoin is infinite. Kabosu is not.</div>
@@ -470,6 +744,13 @@ Target: <span class="highlight">DKabosuForeverRestinPeace111...</span>
 Address = Base58CheckDecode(Target_Pattern)
 PrivateKey = <span class="highlight">UNKNOWN / NON-EXISTENT</span>
 Probability = 1 / 58^34 (Thermodynamically Impossible)
+
+<span style="color:#555">// The Thermodynamic Law:</span>
+<span class="entropy-highlight">ΔS = +∞</span>  (Entropy: Irreversible)
+<span class="entropy-highlight">ΔG = -∞</span>  (Gibbs: Spontaneous Destruction)
+
+<span style="color:#555">// The Heat Death of Value:</span>
+∀ DOGE → BlackHole : <span class="entropy-highlight">∃ no recovery</span>
 </pre>
     </section>
 
@@ -477,10 +758,29 @@ Probability = 1 / 58^34 (Thermodynamically Impossible)
         <h2>The Black Hole</h2>
         <p style="color: var(--dim-color); font-size: 0.9rem;">Send DOGE to this address to burn it forever.</p>
 
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-value" id="total-burned">---</span>
+                <span class="stat-label">Total Burned</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="total-txs">---</span>
+                <span class="stat-label">Transactions</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="largest-burn">---</span>
+                <span class="stat-label">Largest Burn</span>
+            </div>
+        </div>
+
         <div class="burn-address-container">
             <input type="text" class="burn-address" id="doge-address" value="DKabosuForeverRestinPeace1118PGJ77"
                 readonly title="Click to copy">
-            <button class="copy-btn" id="copy-btn">Copy Address</button>
+            <div class="button-group">
+                <button class="copy-btn" id="copy-btn">Copy Address</button>
+                <a class="explorer-btn" href="https://dogechain.info/address/DKabosuForeverRestinPeace1118PGJ77" target="_blank" rel="noopener">View on Explorer</a>
+            </div>
         </div>
 
         <div class="counter">
@@ -488,6 +788,45 @@ Probability = 1 / 58^34 (Thermodynamically Impossible)
             <span class="balance-value" id="balance-display">--- DOGE</span>
             returned to the void
         </div>
+
+        <!-- Transaction History -->
+        <div class="tx-history">
+            <h3>━━━ VOID TRANSMISSIONS ━━━</h3>
+            <div class="tx-list" id="tx-list">
+                <div class="tx-item">
+                    <span class="tx-message">Loading transmissions...</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container verification">
+        <h2>Verification</h2>
+        <p style="text-align: center; color: var(--dim-color); font-size: 0.9rem;">
+            Cryptographic proof that this address has no private key.
+        </p>
+        <pre>
+<span style="color:#555">// Base58Check Address Breakdown</span>
+Address: <span class="highlight">DKabosuForeverRestinPeace1118PGJ77</span>
+
+<span style="color:#555">// Step 1: Decode Base58</span>
+Version Byte: <span class="highlight">0x1e</span> (Dogecoin P2PKH)
+Payload:      <span class="highlight">[vanity pattern hash]</span>
+Checksum:     <span class="highlight">8PGJ77</span> (last 4 bytes of double SHA256)
+
+<span style="color:#555">// Step 2: The Mathematical Impossibility</span>
+To spend from this address requires:
+  → Find PrivateKey k where:
+  → PublicKey(k) = RIPEMD160(SHA256(vanity_pattern))
+  
+Probability: <span class="entropy-highlight">≈ 1 / 2^160</span>
+Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</span>
+</pre>
+        <p style="text-align: center;">
+            <a class="verify-link" href="https://github.com/smallyunet/dark20/blob/main/verify_vanity.py" target="_blank" rel="noopener">
+                → View Verification Script (verify_vanity.py)
+            </a>
+        </p>
     </section>
 
     <footer>
@@ -506,23 +845,198 @@ Probability = 1 / 58^34 (Thermodynamically Impossible)
             const balanceDisplay = document.getElementById('balance-display');
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
+            const txList = document.getElementById('tx-list');
+            const totalBurnedEl = document.getElementById('total-burned');
+            const totalTxsEl = document.getElementById('total-txs');
+            const largestBurnEl = document.getElementById('largest-burn');
 
             const DEAD_ADDRESS = "DKabosuForeverRestinPeace1118PGJ77";
+            let lastKnownBalance = 0;
+            let knownTxHashes = new Set();
 
-            const PROVIDERS = [
-                {
-                    name: "BlockCypher",
-                    url: `https://api.blockcypher.com/v1/doge/main/addrs/${DEAD_ADDRESS}/balance`,
-                    parse: (data) => data.final_balance / 100000000
-                },
-                {
-                    name: "Chain.so",
-                    url: `https://chain.so/api/v2/get_address_balance/DOGE/${DEAD_ADDRESS}`,
-                    parse: (data) => parseFloat(data.data.confirmed_balance)
+            // ═══════════════════════════════════════════════════════════════
+            // STARFIELD BACKGROUND
+            // ═══════════════════════════════════════════════════════════════
+            const starfieldCanvas = document.getElementById('starfield');
+            const starfieldCtx = starfieldCanvas.getContext('2d');
+            let stars = [];
+
+            function initStarfield() {
+                starfieldCanvas.width = window.innerWidth;
+                starfieldCanvas.height = window.innerHeight;
+                stars = [];
+                const numStars = Math.floor((starfieldCanvas.width * starfieldCanvas.height) / 8000);
+                
+                for (let i = 0; i < numStars; i++) {
+                    stars.push({
+                        x: Math.random() * starfieldCanvas.width,
+                        y: Math.random() * starfieldCanvas.height,
+                        radius: Math.random() * 1.5,
+                        opacity: Math.random() * 0.8 + 0.2,
+                        twinkleSpeed: Math.random() * 0.02 + 0.005
+                    });
                 }
-            ];
+            }
 
-            // --- Copy Functionality ---
+            function animateStarfield() {
+                starfieldCtx.fillStyle = '#050505';
+                starfieldCtx.fillRect(0, 0, starfieldCanvas.width, starfieldCanvas.height);
+
+                stars.forEach(star => {
+                    star.opacity += star.twinkleSpeed;
+                    if (star.opacity > 1 || star.opacity < 0.2) {
+                        star.twinkleSpeed *= -1;
+                    }
+                    
+                    starfieldCtx.beginPath();
+                    starfieldCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    starfieldCtx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                    starfieldCtx.fill();
+                });
+
+                requestAnimationFrame(animateStarfield);
+            }
+
+            initStarfield();
+            animateStarfield();
+            window.addEventListener('resize', initStarfield);
+
+            // ═══════════════════════════════════════════════════════════════
+            // BLACK HOLE PARTICLE ABSORPTION
+            // ═══════════════════════════════════════════════════════════════
+            const bhCanvas = document.getElementById('blackhole-canvas');
+            const bhCtx = bhCanvas.getContext('2d');
+            let particles = [];
+
+            function initBlackhole() {
+                const rect = bhCanvas.getBoundingClientRect();
+                bhCanvas.width = 400;
+                bhCanvas.height = 400;
+            }
+
+            function createParticle() {
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 180 + Math.random() * 50;
+                return {
+                    x: 200 + Math.cos(angle) * distance,
+                    y: 200 + Math.sin(angle) * distance,
+                    angle: angle,
+                    distance: distance,
+                    speed: 0.3 + Math.random() * 0.5,
+                    size: 1 + Math.random() * 2,
+                    color: Math.random() > 0.5 ? 
+                        `rgba(255, ${150 + Math.random() * 100}, 50, ` : 
+                        `rgba(${200 + Math.random() * 55}, ${200 + Math.random() * 55}, 255, `
+                };
+            }
+
+            function animateBlackhole() {
+                bhCtx.clearRect(0, 0, bhCanvas.width, bhCanvas.height);
+
+                // Add new particles
+                if (particles.length < 50 && Math.random() > 0.9) {
+                    particles.push(createParticle());
+                }
+
+                // Update and draw particles
+                particles = particles.filter(p => {
+                    // Spiral inward
+                    p.distance -= p.speed;
+                    p.angle += (0.02 + (200 - p.distance) * 0.0003);
+                    
+                    p.x = 200 + Math.cos(p.angle) * p.distance;
+                    p.y = 200 + Math.sin(p.angle) * p.distance;
+
+                    if (p.distance < 30) return false; // Absorbed
+
+                    // Fade as approaching center
+                    const opacity = Math.min(1, (p.distance - 30) / 100);
+                    
+                    bhCtx.beginPath();
+                    bhCtx.arc(p.x, p.y, p.size * (p.distance / 200), 0, Math.PI * 2);
+                    bhCtx.fillStyle = p.color + opacity + ')';
+                    bhCtx.fill();
+
+                    // Glow effect
+                    bhCtx.beginPath();
+                    bhCtx.arc(p.x, p.y, p.size * 2 * (p.distance / 200), 0, Math.PI * 2);
+                    bhCtx.fillStyle = p.color + (opacity * 0.3) + ')';
+                    bhCtx.fill();
+
+                    return true;
+                });
+
+                requestAnimationFrame(animateBlackhole);
+            }
+
+            initBlackhole();
+            animateBlackhole();
+
+            // ═══════════════════════════════════════════════════════════════
+            // CELEBRATION PARTICLES
+            // ═══════════════════════════════════════════════════════════════
+            const celebCanvas = document.getElementById('celebration-canvas');
+            const celebCtx = celebCanvas.getContext('2d');
+            let celebParticles = [];
+
+            function initCelebration() {
+                celebCanvas.width = window.innerWidth;
+                celebCanvas.height = window.innerHeight;
+            }
+
+            function triggerCelebration() {
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 3;
+
+                for (let i = 0; i < 100; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = 5 + Math.random() * 10;
+                    celebParticles.push({
+                        x: centerX,
+                        y: centerY,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed - 5,
+                        size: 2 + Math.random() * 4,
+                        color: ['#ffd700', '#ff6b6b', '#4ecdc4', '#fff'][Math.floor(Math.random() * 4)],
+                        life: 100 + Math.random() * 50
+                    });
+                }
+            }
+
+            function animateCelebration() {
+                celebCtx.clearRect(0, 0, celebCanvas.width, celebCanvas.height);
+
+                celebParticles = celebParticles.filter(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.2; // Gravity
+                    p.life--;
+                    p.vx *= 0.99;
+
+                    if (p.life <= 0) return false;
+
+                    const opacity = p.life / 100;
+                    celebCtx.beginPath();
+                    celebCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    celebCtx.fillStyle = p.color;
+                    celebCtx.globalAlpha = opacity;
+                    celebCtx.fill();
+                    celebCtx.globalAlpha = 1;
+
+                    return true;
+                });
+
+                if (celebParticles.length > 0) {
+                    requestAnimationFrame(animateCelebration);
+                }
+            }
+
+            initCelebration();
+            window.addEventListener('resize', initCelebration);
+
+            // ═══════════════════════════════════════════════════════════════
+            // COPY FUNCTIONALITY
+            // ═══════════════════════════════════════════════════════════════
             function copyToClipboard() {
                 addressInput.select();
                 addressInput.setSelectionRange(0, 99999);
@@ -549,73 +1063,181 @@ Probability = 1 / 58^34 (Thermodynamically Impossible)
             copyBtn.addEventListener('click', copyToClipboard);
             addressInput.addEventListener('click', copyToClipboard);
 
-            // --- Live Balance Fetching ---
+            // ═══════════════════════════════════════════════════════════════
+            // API DATA FETCHING
+            // ═══════════════════════════════════════════════════════════════
             const CACHE_KEY = 'dark20_doge_balance';
+            const TX_CACHE_KEY = 'dark20_doge_txs';
 
-            // 1. Load Cache Immediately (Perceived Performance)
+            // Load Cache Immediately
             const cachedBalance = localStorage.getItem(CACHE_KEY);
             if (cachedBalance) {
                 const b = parseFloat(cachedBalance);
                 if (!isNaN(b)) {
+                    lastKnownBalance = b;
                     const formatted = b.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
                     balanceDisplay.innerText = `${formatted} DOGE`;
+                    totalBurnedEl.innerText = `${formatted}`;
                     statusText.innerText = "Syncing Node...";
                 }
             }
 
-            async function fetchBalance() {
-                // 2. Parallel Fetching (Real Performance)
-                // We race the providers and take the first successful response
-                const promises = PROVIDERS.map(async (provider) => {
-                    const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout per request
-
-                    try {
-                        const response = await fetch(provider.url, { signal: controller.signal });
-                        clearTimeout(timeoutId);
-
-                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-                        const data = await response.json();
-                        const balance = provider.parse(data);
-
-                        if (isNaN(balance)) throw new Error('NaN Balance');
-                        return balance;
-                    } catch (e) {
-                        throw e; // Propagate error to Promise.any
-                    }
-                });
-
+            async function fetchAddressData() {
                 try {
-                    const balance = await Promise.any(promises);
-                    updateDisplay(balance);
-                } catch (aggregateError) {
-                    console.warn("All providers failed:", aggregateError);
-                    // Only show error if we don't have a cache or if we want to confirm connectivity loss
-                    // keeping the cached value is usually better than showing an error, but let's update status
-                    if (!statusDot.classList.contains('live')) {
-                        statusText.innerText = "Network Error (Retrying...)";
+                    // Using BlockCypher for detailed data
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+                    const response = await fetch(
+                        `https://api.blockcypher.com/v1/doge/main/addrs/${DEAD_ADDRESS}?limit=10`,
+                        { signal: controller.signal }
+                    );
+                    clearTimeout(timeoutId);
+
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                    const data = await response.json();
+                    
+                    // Update balance
+                    const balance = data.final_balance / 100000000;
+                    updateBalance(balance);
+
+                    // Update stats
+                    updateStats(data);
+
+                    // Update transaction history
+                    if (data.txrefs) {
+                        updateTransactions(data.txrefs);
+                    }
+
+                } catch (e) {
+                    console.warn("Primary API failed, trying fallback:", e);
+                    // Fallback to Chain.so
+                    try {
+                        const response = await fetch(`https://chain.so/api/v2/get_address_balance/DOGE/${DEAD_ADDRESS}`);
+                        const data = await response.json();
+                        const balance = parseFloat(data.data.confirmed_balance);
+                        updateBalance(balance);
+                    } catch (e2) {
+                        console.warn("All APIs failed:", e2);
+                        if (!statusDot.classList.contains('live')) {
+                            statusText.innerText = "Network Error (Retrying...)";
+                        }
                     }
                 }
             }
 
-            function updateDisplay(balance) {
-                // Format with commas
+            function updateBalance(balance) {
                 const formatted = balance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+                
+                // Check for new burn
+                if (lastKnownBalance > 0 && balance > lastKnownBalance) {
+                    const diff = balance - lastKnownBalance;
+                    console.log(`New burn detected! +${diff} DOGE`);
+                    
+                    // Trigger celebration
+                    triggerCelebration();
+                    animateCelebration();
+                    
+                    // Animate balance
+                    balanceDisplay.classList.add('new-burn');
+                    setTimeout(() => balanceDisplay.classList.remove('new-burn'), 1000);
+
+                    // Animate stats
+                    totalBurnedEl.classList.add('animating');
+                    setTimeout(() => totalBurnedEl.classList.remove('animating'), 500);
+                }
+
+                lastKnownBalance = balance;
                 balanceDisplay.innerText = `${formatted} DOGE`;
+                totalBurnedEl.innerText = `${formatted}`;
 
                 statusDot.classList.add('live');
                 statusText.innerText = "Live Network Data";
 
-                // Save to cache
                 localStorage.setItem(CACHE_KEY, balance);
             }
 
+            function updateStats(data) {
+                // Total transactions
+                const txCount = data.n_tx || 0;
+                totalTxsEl.innerText = txCount.toLocaleString();
+
+                // Find largest burn from available txrefs
+                if (data.txrefs && data.txrefs.length > 0) {
+                    const received = data.txrefs.filter(tx => tx.tx_input_n === -1);
+                    if (received.length > 0) {
+                        const largest = Math.max(...received.map(tx => tx.value));
+                        const largestFormatted = (largest / 100000000).toLocaleString('en-US', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 2
+                        });
+                        largestBurnEl.innerText = `${largestFormatted} DOGE`;
+                    }
+                }
+            }
+
+            function updateTransactions(txrefs) {
+                // Filter to only received transactions
+                const received = txrefs.filter(tx => tx.tx_input_n === -1);
+                if (received.length === 0) return;
+
+                let html = '';
+                let newTxFound = false;
+
+                received.forEach((tx, index) => {
+                    const amount = (tx.value / 100000000).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 4
+                    });
+                    const time = timeAgo(new Date(tx.confirmed));
+                    const hashShort = tx.tx_hash.substring(0, 8) + '...' + tx.tx_hash.substring(tx.tx_hash.length - 6);
+                    
+                    const isNew = !knownTxHashes.has(tx.tx_hash);
+                    if (isNew && knownTxHashes.size > 0) {
+                        newTxFound = true;
+                    }
+                    knownTxHashes.add(tx.tx_hash);
+
+                    html += `
+                        <div class="tx-item ${isNew && knownTxHashes.size > 1 ? 'new-tx' : ''}">
+                            <div>
+                                <span class="tx-amount">${amount} DOGE</span>
+                                <span class="tx-message"> entered the void</span>
+                                <div class="tx-hash">
+                                    <a href="https://dogechain.info/tx/${tx.tx_hash}" target="_blank" rel="noopener">${hashShort}</a>
+                                </div>
+                            </div>
+                            <span class="tx-time">${time}</span>
+                        </div>
+                    `;
+                });
+
+                txList.innerHTML = html;
+
+                // If new transaction found, trigger celebration
+                if (newTxFound) {
+                    triggerCelebration();
+                    animateCelebration();
+                }
+            }
+
+            function timeAgo(date) {
+                const seconds = Math.floor((new Date() - date) / 1000);
+                
+                if (seconds < 60) return 'just now';
+                if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+                if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+                if (seconds < 2592000) return Math.floor(seconds / 86400) + 'd ago';
+                if (seconds < 31536000) return Math.floor(seconds / 2592000) + 'mo ago';
+                return Math.floor(seconds / 31536000) + 'y ago';
+            }
+
             // Initial fetch
-            fetchBalance();
+            fetchAddressData();
 
             // Poll every 30 seconds
-            setInterval(fetchBalance, 30000);
+            setInterval(fetchAddressData, 30000);
         });
     </script>
 </body>
