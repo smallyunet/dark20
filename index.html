@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DARK-20 | The Final Protocol</title>
+    <title>DARK-DOGE | The Final Protocol</title>
+    <!-- Google Fonts: Space Mono for Cyberpunk aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --bg-color: #050505;
@@ -12,7 +17,8 @@
             --dim-color: #666666;
             --accent-color: #ffffff;
             --error-color: #ff3333;
-            --font-stack: "Courier New", "Roboto Mono", monospace;
+            /* Updated Font Stack */
+            --font-stack: "Space Mono", "Courier New", monospace;
         }
 
         * {
@@ -23,6 +29,9 @@
 
         body {
             background-color: var(--bg-color);
+            /* Deep Space Gradient for depth */
+            background-image: radial-gradient(circle at 50% 30%, #1a1a1a 0%, #050505 60%);
+            background-attachment: fixed;
             color: var(--text-color);
             font-family: var(--font-stack);
             line-height: 1.6;
@@ -36,7 +45,8 @@
         h1,
         h2,
         h3 {
-            font-weight: normal;
+            font-weight: 700;
+            /* Bolder headers */
             letter-spacing: -0.05em;
             text-transform: uppercase;
         }
@@ -60,6 +70,8 @@
             width: 100%;
             height: 100%;
             background: var(--bg-color);
+            /* Performance Optimization */
+            will-change: clip;
         }
 
         .glitch::before {
@@ -240,6 +252,8 @@
             border-radius: 50%;
             border: 1px solid rgba(255, 255, 255, 0.05);
             animation: spin 20s linear infinite;
+            /* Performance Optimization */
+            will-change: transform;
         }
 
         @keyframes pulse-glow {
@@ -319,9 +333,10 @@
         }
 
         .burn-address:hover {
-            border-color: #777;
+            border-color: var(--accent-color);
             background: #111;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            transform: scale(1.01);
         }
 
         .copy-btn {
@@ -426,7 +441,7 @@
 <body>
 
     <div class="container hero">
-        <h1 class="glitch" data-text="DARK-20">DARK-20</h1>
+        <h1 class="glitch" data-text="DARK-DOGE">DARK-DOGE</h1>
         <div class="subtitle">THE FINAL PROTOCOL</div>
 
         <div class="visual-void">
@@ -446,14 +461,15 @@
     <section class="container mechanism">
         <h2>The Mechanism</h2>
         <br>
-        <p style="text-align: center; color: var(--dim-color);">Cryptographically Derived. Trustless.</p>
+        <p style="text-align: center; color: var(--dim-color);">Vanity Null-Address. Mathematically Void.</p>
         <pre>
-<span style="color:#555">// The Nothing Up My Sleeve Formula</span>
-<span class="tech-equation">H160 = RIPEMD160(SHA256('<span class="highlight">Kabosu: 2005-2024</span>'))</span>
+<span style="color:#555">// The Unsolvable Riddle</span>
+Target: <span class="highlight">DKabosuForeverRestinPeace111...</span>
 
-<span style="color:#555">// Status:</span>
-> Private Key: <span class="highlight">UNKNOWN</span>
-> Balance Access: <span class="highlight">IMPOSSIBLE</span>
+<span style="color:#555">// Proof of Void:</span>
+Address = Base58CheckDecode(Target_Pattern)
+PrivateKey = <span class="highlight">UNKNOWN / NON-EXISTENT</span>
+Probability = 1 / 58^34 (Thermodynamically Impossible)
 </pre>
     </section>
 
@@ -462,7 +478,7 @@
         <p style="color: var(--dim-color); font-size: 0.9rem;">Send DOGE to this address to burn it forever.</p>
 
         <div class="burn-address-container">
-            <input type="text" class="burn-address" id="doge-address" value="DJAskJgeZ3apWWGcpDyWxxZM7fMDFkpZ53"
+            <input type="text" class="burn-address" id="doge-address" value="DKabosuForeverRestinPeace1118PGJ77"
                 readonly title="Click to copy">
             <button class="copy-btn" id="copy-btn">Copy Address</button>
         </div>
@@ -491,7 +507,7 @@
             const statusDot = document.getElementById('status-dot');
             const statusText = document.getElementById('status-text');
 
-            const DEAD_ADDRESS = "DJAskJgeZ3apWWGcpDyWxxZM7fMDFkpZ53";
+            const DEAD_ADDRESS = "DKabosuForeverRestinPeace1118PGJ77";
 
             const PROVIDERS = [
                 {
@@ -534,35 +550,65 @@
             addressInput.addEventListener('click', copyToClipboard);
 
             // --- Live Balance Fetching ---
+            const CACHE_KEY = 'dark20_doge_balance';
+
+            // 1. Load Cache Immediately (Perceived Performance)
+            const cachedBalance = localStorage.getItem(CACHE_KEY);
+            if (cachedBalance) {
+                const b = parseFloat(cachedBalance);
+                if (!isNaN(b)) {
+                    const formatted = b.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+                    balanceDisplay.innerText = `${formatted} DOGE`;
+                    statusText.innerText = "Syncing Node...";
+                }
+            }
+
             async function fetchBalance() {
-                // Iterate through providers until one works
-                for (const provider of PROVIDERS) {
+                // 2. Parallel Fetching (Real Performance)
+                // We race the providers and take the first successful response
+                const promises = PROVIDERS.map(async (provider) => {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout per request
+
                     try {
-                        const response = await fetch(provider.url);
-                        if (response.ok) {
-                            const data = await response.json();
-                            const balance = provider.parse(data);
-                            if (!isNaN(balance)) {
-                                updateDisplay(balance);
-                                return; // Success, exit function
-                            }
-                        }
+                        const response = await fetch(provider.url, { signal: controller.signal });
+                        clearTimeout(timeoutId);
+
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                        const data = await response.json();
+                        const balance = provider.parse(data);
+
+                        if (isNaN(balance)) throw new Error('NaN Balance');
+                        return balance;
                     } catch (e) {
-                        console.warn(`${provider.name} failed:`, e);
+                        throw e; // Propagate error to Promise.any
+                    }
+                });
+
+                try {
+                    const balance = await Promise.any(promises);
+                    updateDisplay(balance);
+                } catch (aggregateError) {
+                    console.warn("All providers failed:", aggregateError);
+                    // Only show error if we don't have a cache or if we want to confirm connectivity loss
+                    // keeping the cached value is usually better than showing an error, but let's update status
+                    if (!statusDot.classList.contains('live')) {
+                        statusText.innerText = "Network Error (Retrying...)";
                     }
                 }
-
-                // If loop finishes, all providers failed
-                statusText.innerText = "Network Error (Retrying...)";
-                statusDot.classList.remove('live');
             }
 
             function updateDisplay(balance) {
                 // Format with commas
                 const formatted = balance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
                 balanceDisplay.innerText = `${formatted} DOGE`;
+
                 statusDot.classList.add('live');
                 statusText.innerText = "Live Network Data";
+
+                // Save to cache
+                localStorage.setItem(CACHE_KEY, balance);
             }
 
             // Initial fetch
