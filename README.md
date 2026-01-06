@@ -13,13 +13,13 @@ This is a single-page digital experience designed to facilitate the voluntary bu
 - **Token Sale**: NEVER.
 - **Profit**: 0.
 
-## Development
+### The Black Hole
+**Address:** `DDogepartyxxxxxxxxxxxxxxxxxxw1dfzr`
 
-This project is built with radical minimalism. No frameworks. No build steps. Pure HTML/CSS/JS.
-
-### Requirements
-
-- A web browser.
+This is the historic "Dogeparty" burn address.
+- **Keys**: None.
+- **Burned**: > 1.8 Billion DOGE.
+- **Status**: Infinite Void.
 
 ### Running Locally
 

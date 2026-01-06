@@ -5,12 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DARK-DOGE | The Final Protocol</title>
-    <meta name="description" content="A digital monument to Kabosu. Send Dogecoin to the void - a cryptographically derived, unspendable burn address.">
+    <meta name="description"
+        content="A digital monument to Kabosu. Send Dogecoin to the void - a cryptographically derived, unspendable burn address.">
     <!-- Google Fonts: Space Mono for Cyberpunk aesthetic -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="DARK-20 | The Doge Black Hole">
+    <meta property="og:description" content="A digital monument to loss. Watch Dogecoin burn forever in the void.">
+    <meta property="og:image" content="https://dogecoin.com/assets/img/doge.png"> <!-- Fallback/Placeholder -->
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Dynamic Favicon (SVG) -->
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22black%22/><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22none%22 stroke=%22white%22 stroke-width=%222%22/></svg>">
     <style>
         :root {
             --bg-color: #050505;
@@ -88,32 +100,76 @@
             left: 2px;
             text-shadow: -1px 0 var(--glow-magenta);
             clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim-1 5s infinite linear alternate-reverse;
+            /* Slower, more random feel */
+            animation: glitch-anim-1 8s infinite linear alternate-reverse;
         }
 
         .glitch::after {
             left: -2px;
             text-shadow: -1px 0 var(--glow-cyan);
             clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim-2 5s infinite linear alternate-reverse;
+            animation: glitch-anim-2 8s infinite linear alternate-reverse;
         }
 
         @keyframes glitch-anim-1 {
-            0% { clip: rect(30px, 9999px, 10px, 0); }
-            5% { clip: rect(70px, 9999px, 90px, 0); }
-            10% { clip: rect(20px, 9999px, 60px, 0); }
-            15% { clip: rect(80px, 9999px, 40px, 0); }
-            20% { clip: rect(10px, 9999px, 100px, 0); }
-            to { clip: rect(0, 0, 0, 0); }
+
+            0%,
+            80% {
+                clip: rect(0, 0, 0, 0);
+            }
+
+            /* Pause for 80% of time */
+            81% {
+                clip: rect(30px, 9999px, 10px, 0);
+            }
+
+            85% {
+                clip: rect(70px, 9999px, 90px, 0);
+            }
+
+            90% {
+                clip: rect(20px, 9999px, 60px, 0);
+            }
+
+            95% {
+                clip: rect(80px, 9999px, 40px, 0);
+            }
+
+            100% {
+                clip: rect(0, 0, 0, 0);
+            }
         }
 
         @keyframes glitch-anim-2 {
-            0% { clip: rect(10px, 9999px, 80px, 0); }
-            5% { clip: rect(90px, 9999px, 10px, 0); }
-            10% { clip: rect(50px, 9999px, 20px, 0); }
-            15% { clip: rect(30px, 9999px, 70px, 0); }
-            20% { clip: rect(60px, 9999px, 50px, 0); }
-            to { clip: rect(0, 0, 0, 0); }
+
+            0%,
+            80% {
+                clip: rect(0, 0, 0, 0);
+            }
+
+            82% {
+                clip: rect(10px, 9999px, 80px, 0);
+            }
+
+            86% {
+                clip: rect(90px, 9999px, 10px, 0);
+            }
+
+            91% {
+                clip: rect(50px, 9999px, 20px, 0);
+            }
+
+            94% {
+                clip: rect(30px, 9999px, 70px, 0);
+            }
+
+            97% {
+                clip: rect(60px, 9999px, 50px, 0);
+            }
+
+            100% {
+                clip: rect(0, 0, 0, 0);
+            }
         }
 
         p {
@@ -208,7 +264,7 @@
             transform: translate(-50%, -50%);
             background: #000;
             border-radius: 50%;
-            box-shadow: 
+            box-shadow:
                 0 0 60px rgba(0, 0, 0, 1),
                 0 0 100px rgba(0, 0, 0, 0.8),
                 inset 0 0 60px rgba(0, 0, 0, 1);
@@ -221,10 +277,6 @@
             transform: translate(-50%, -50%) scale(1.05);
         }
 
-        .visual-void:hover .kabosu-silhouette {
-            opacity: 0.6;
-        }
-
         /* Accretion Disk */
         .accretion-disk {
             position: absolute;
@@ -234,24 +286,27 @@
             width: 280px;
             height: 280px;
             border-radius: 50%;
-            background: conic-gradient(
-                from 0deg,
-                transparent 0deg,
-                rgba(255, 150, 50, 0.3) 60deg,
-                rgba(255, 200, 100, 0.5) 120deg,
-                rgba(255, 100, 50, 0.3) 180deg,
-                transparent 240deg,
-                rgba(255, 150, 50, 0.2) 300deg,
-                transparent 360deg
-            );
+            background: conic-gradient(from 0deg,
+                    transparent 0deg,
+                    rgba(255, 150, 50, 0.3) 60deg,
+                    rgba(255, 200, 100, 0.5) 120deg,
+                    rgba(255, 100, 50, 0.3) 180deg,
+                    transparent 240deg,
+                    rgba(255, 150, 50, 0.2) 300deg,
+                    transparent 360deg);
             animation: spin-disk 8s linear infinite;
             z-index: 1;
             filter: blur(3px);
         }
 
         @keyframes spin-disk {
-            from { transform: translate(-50%, -50%) rotateX(75deg) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotateX(75deg) rotate(360deg); }
+            from {
+                transform: translate(-50%, -50%) rotateX(75deg) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotateX(75deg) rotate(360deg);
+            }
         }
 
         /* Event Horizon Glow */
@@ -269,34 +324,20 @@
         }
 
         @keyframes pulse-horizon {
-            0%, 100% { 
+
+            0%,
+            100% {
                 box-shadow: 0 0 20px rgba(255, 100, 50, 0.3), 0 0 40px rgba(255, 50, 0, 0.1);
                 opacity: 0.5;
             }
-            50% { 
+
+            50% {
                 box-shadow: 0 0 40px rgba(255, 100, 50, 0.5), 0 0 80px rgba(255, 50, 0, 0.2);
                 opacity: 1;
             }
         }
 
-        /* Kabosu Silhouette */
-        .kabosu-silhouette {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            z-index: 3;
-        }
 
-        .kabosu-silhouette svg {
-            width: 100%;
-            height: 100%;
-            fill: rgba(255, 255, 255, 0.15);
-        }
 
         /* Manifesto */
         .manifesto {
@@ -367,8 +408,16 @@
         }
 
         @keyframes number-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); color: var(--glow-gold); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+                color: var(--glow-gold);
+            }
         }
 
         .stat-label {
@@ -414,7 +463,8 @@
             flex-wrap: wrap;
         }
 
-        .copy-btn, .explorer-btn {
+        .copy-btn,
+        .explorer-btn {
             background: transparent;
             border: 1px solid var(--text-color);
             color: var(--text-color);
@@ -428,7 +478,8 @@
             text-decoration: none;
         }
 
-        .copy-btn:hover, .explorer-btn:hover {
+        .copy-btn:hover,
+        .explorer-btn:hover {
             background: var(--text-color);
             color: var(--bg-color);
         }
@@ -453,9 +504,20 @@
         }
 
         @keyframes balance-glow {
-            0% { color: var(--text-color); text-shadow: none; }
-            50% { color: var(--glow-gold); text-shadow: 0 0 30px var(--glow-gold); }
-            100% { color: var(--text-color); text-shadow: none; }
+            0% {
+                color: var(--text-color);
+                text-shadow: none;
+            }
+
+            50% {
+                color: var(--glow-gold);
+                text-shadow: 0 0 30px var(--glow-gold);
+            }
+
+            100% {
+                color: var(--text-color);
+                text-shadow: none;
+            }
         }
 
         .status-dot {
@@ -474,8 +536,15 @@
         }
 
         @keyframes pulse-dot {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
         /* Transaction History */
@@ -521,8 +590,13 @@
         }
 
         @keyframes tx-flash {
-            0% { background: rgba(255, 215, 0, 0.3); }
-            100% { background: transparent; }
+            0% {
+                background: rgba(255, 215, 0, 0.3);
+            }
+
+            100% {
+                background: transparent;
+            }
         }
 
         .tx-amount {
@@ -555,6 +629,45 @@
             color: var(--dim-color);
             font-style: italic;
             font-size: 0.8rem;
+        }
+
+        /* Supply Progress Bar */
+        .supply-container {
+            margin: 3rem auto;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .supply-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--dim-color);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 4px;
+            background: #111;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--glow-gold);
+            width: 0%;
+            box-shadow: 0 0 10px var(--glow-gold);
+            transition: width 1s ease;
+        }
+
+        .supply-stat {
+            color: var(--text-color);
+            font-weight: bold;
         }
 
         /* Verification Section */
@@ -712,17 +825,25 @@
             <canvas id="blackhole-canvas"></canvas>
             <div class="accretion-disk"></div>
             <div class="event-horizon"></div>
-            <div class="visual-void">
-                <div class="kabosu-silhouette">
-                    <!-- Simplified Shiba Inu Silhouette -->
-                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M50 10 C30 10 20 25 18 35 L10 30 L15 45 C12 50 10 60 15 75 C20 90 35 95 50 95 C65 95 80 90 85 75 C90 60 88 50 85 45 L90 30 L82 35 C80 25 70 10 50 10 Z M35 50 C38 50 40 52 40 55 C40 58 38 60 35 60 C32 60 30 58 30 55 C30 52 32 50 35 50 Z M65 50 C68 50 70 52 70 55 C70 58 68 60 65 60 C62 60 60 58 60 55 C60 52 62 50 65 50 Z M50 65 C55 65 58 68 58 70 C58 72 55 75 50 75 C45 75 42 72 42 70 C42 68 45 65 50 65 Z"/>
-                    </svg>
-                </div>
-            </div>
+            <div class="visual-void"></div>
         </div>
 
         <div class="tagline">Dogecoin is infinite. Kabosu is not.</div>
+
+        <!-- Supply Progress -->
+        <div class="supply-container">
+            <div class="supply-label">
+                <span>Void Saturation (Burned / Total Supply)</span>
+                <span id="supply-percent" class="supply-stat">0.00%</span>
+            </div>
+            <div class="progress-track">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+            <div class="supply-label" style="margin-top: 0.5rem;">
+                <span id="supply-burned">---</span>
+                <span id="supply-total">Est. Supply: ---</span>
+            </div>
+        </div>
     </div>
 
     <section class="container manifesto">
@@ -738,7 +859,7 @@
         <p style="text-align: center; color: var(--dim-color);">Vanity Null-Address. Mathematically Void.</p>
         <pre>
 <span style="color:#555">// The Unsolvable Riddle</span>
-Target: <span class="highlight">DKabosuForeverRestinPeace111...</span>
+Target: <span class="highlight">DDogepartyxxxxxxxxxxxxxxxxxxw1dfzr</span>
 
 <span style="color:#555">// Proof of Void:</span>
 Address = Base58CheckDecode(Target_Pattern)
@@ -775,11 +896,12 @@ Probability = 1 / 58^34 (Thermodynamically Impossible)
         </div>
 
         <div class="burn-address-container">
-            <input type="text" class="burn-address" id="doge-address" value="DKabosuForeverRestinPeace1118PGJ77"
+            <input type="text" class="burn-address" id="doge-address" value="DDogepartyxxxxxxxxxxxxxxxxxxw1dfzr"
                 readonly title="Click to copy">
             <div class="button-group">
                 <button class="copy-btn" id="copy-btn">Copy Address</button>
-                <a class="explorer-btn" href="https://dogechain.info/address/DKabosuForeverRestinPeace1118PGJ77" target="_blank" rel="noopener">View on Explorer</a>
+                <a class="explorer-btn" href="https://dogechain.info/address/DDogepartyxxxxxxxxxxxxxxxxxxw1dfzr"
+                    target="_blank" rel="noopener">View on Explorer</a>
             </div>
         </div>
 
@@ -800,33 +922,6 @@ Probability = 1 / 58^34 (Thermodynamically Impossible)
         </div>
     </section>
 
-    <section class="container verification">
-        <h2>Verification</h2>
-        <p style="text-align: center; color: var(--dim-color); font-size: 0.9rem;">
-            Cryptographic proof that this address has no private key.
-        </p>
-        <pre>
-<span style="color:#555">// Base58Check Address Breakdown</span>
-Address: <span class="highlight">DKabosuForeverRestinPeace1118PGJ77</span>
-
-<span style="color:#555">// Step 1: Decode Base58</span>
-Version Byte: <span class="highlight">0x1e</span> (Dogecoin P2PKH)
-Payload:      <span class="highlight">[vanity pattern hash]</span>
-Checksum:     <span class="highlight">8PGJ77</span> (last 4 bytes of double SHA256)
-
-<span style="color:#555">// Step 2: The Mathematical Impossibility</span>
-To spend from this address requires:
-  → Find PrivateKey k where:
-  → PublicKey(k) = RIPEMD160(SHA256(vanity_pattern))
-  
-Probability: <span class="entropy-highlight">≈ 1 / 2^160</span>
-Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</span>
-</pre>
-        <p style="text-align: center;">
-            <a class="verify-link" href="https://github.com/smallyunet/dark20/blob/main/verify_vanity.py" target="_blank" rel="noopener">
-                → View Verification Script (verify_vanity.py)
-            </a>
-        </p>
     </section>
 
     <footer>
@@ -850,9 +945,10 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
             const totalTxsEl = document.getElementById('total-txs');
             const largestBurnEl = document.getElementById('largest-burn');
 
-            const DEAD_ADDRESS = "DKabosuForeverRestinPeace1118PGJ77";
+            const DEAD_ADDRESS = "DDogepartyxxxxxxxxxxxxxxxxxxw1dfzr";
             let lastKnownBalance = 0;
             let knownTxHashes = new Set();
+            let isFirstLoad = true;
 
             // ═══════════════════════════════════════════════════════════════
             // STARFIELD BACKGROUND
@@ -866,7 +962,7 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
                 starfieldCanvas.height = window.innerHeight;
                 stars = [];
                 const numStars = Math.floor((starfieldCanvas.width * starfieldCanvas.height) / 8000);
-                
+
                 for (let i = 0; i < numStars; i++) {
                     stars.push({
                         x: Math.random() * starfieldCanvas.width,
@@ -887,7 +983,7 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
                     if (star.opacity > 1 || star.opacity < 0.2) {
                         star.twinkleSpeed *= -1;
                     }
-                    
+
                     starfieldCtx.beginPath();
                     starfieldCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
                     starfieldCtx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
@@ -924,8 +1020,8 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
                     distance: distance,
                     speed: 0.3 + Math.random() * 0.5,
                     size: 1 + Math.random() * 2,
-                    color: Math.random() > 0.5 ? 
-                        `rgba(255, ${150 + Math.random() * 100}, 50, ` : 
+                    color: Math.random() > 0.5 ?
+                        `rgba(255, ${150 + Math.random() * 100}, 50, ` :
                         `rgba(${200 + Math.random() * 55}, ${200 + Math.random() * 55}, 255, `
                 };
             }
@@ -943,7 +1039,7 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
                     // Spiral inward
                     p.distance -= p.speed;
                     p.angle += (0.02 + (200 - p.distance) * 0.0003);
-                    
+
                     p.x = 200 + Math.cos(p.angle) * p.distance;
                     p.y = 200 + Math.sin(p.angle) * p.distance;
 
@@ -951,7 +1047,7 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
 
                     // Fade as approaching center
                     const opacity = Math.min(1, (p.distance - 30) / 100);
-                    
+
                     bhCtx.beginPath();
                     bhCtx.arc(p.x, p.y, p.size * (p.distance / 200), 0, Math.PI * 2);
                     bhCtx.fillStyle = p.color + opacity + ')';
@@ -1097,7 +1193,7 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
                     const data = await response.json();
-                    
+
                     // Update balance
                     const balance = data.final_balance / 100000000;
                     updateBalance(balance);
@@ -1129,16 +1225,16 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
 
             function updateBalance(balance) {
                 const formatted = balance.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-                
+
                 // Check for new burn
                 if (lastKnownBalance > 0 && balance > lastKnownBalance) {
                     const diff = balance - lastKnownBalance;
                     console.log(`New burn detected! +${diff} DOGE`);
-                    
+
                     // Trigger celebration
                     triggerCelebration();
                     animateCelebration();
-                    
+
                     // Animate balance
                     balanceDisplay.classList.add('new-burn');
                     setTimeout(() => balanceDisplay.classList.remove('new-burn'), 1000);
@@ -1151,6 +1247,9 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
                 lastKnownBalance = balance;
                 balanceDisplay.innerText = `${formatted} DOGE`;
                 totalBurnedEl.innerText = `${formatted}`;
+
+                // Update Supply Stats
+                updateSupplyStats(balance);
 
                 statusDot.classList.add('live');
                 statusText.innerText = "Live Network Data";
@@ -1185,6 +1284,23 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
                 let html = '';
                 let newTxFound = false;
 
+                // First pass: identify which hashes are new
+                const incomingHashes = new Set(received.map(tx => tx.tx_hash));
+
+                // If it's not the first load, check if we have unseen hashes
+                if (!isFirstLoad) {
+                    for (let hash of incomingHashes) {
+                        if (!knownTxHashes.has(hash)) {
+                            newTxFound = true;
+                            break;
+                        }
+                    }
+                }
+
+                // Update known hashes
+                // We add them all now so the display loop knows they are "known"
+                // But for the "new-tx" class, we only apply it if !isFirstLoad
+
                 received.forEach((tx, index) => {
                     const amount = (tx.value / 100000000).toLocaleString('en-US', {
                         minimumFractionDigits: 2,
@@ -1192,15 +1308,12 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
                     });
                     const time = timeAgo(new Date(tx.confirmed));
                     const hashShort = tx.tx_hash.substring(0, 8) + '...' + tx.tx_hash.substring(tx.tx_hash.length - 6);
-                    
-                    const isNew = !knownTxHashes.has(tx.tx_hash);
-                    if (isNew && knownTxHashes.size > 0) {
-                        newTxFound = true;
-                    }
+
+                    const isNew = !knownTxHashes.has(tx.tx_hash) && !isFirstLoad;
                     knownTxHashes.add(tx.tx_hash);
 
                     html += `
-                        <div class="tx-item ${isNew && knownTxHashes.size > 1 ? 'new-tx' : ''}">
+                        <div class="tx-item ${isNew ? 'new-tx' : ''}">
                             <div>
                                 <span class="tx-amount">${amount} DOGE</span>
                                 <span class="tx-message"> entered the void</span>
@@ -1215,22 +1328,49 @@ Estimated Time: <span class="entropy-highlight">&gt; Age of Universe × 10^20</s
 
                 txList.innerHTML = html;
 
-                // If new transaction found, trigger celebration
-                if (newTxFound) {
+                // Trigger celebration only if new tx found AND not first load
+                if (newTxFound && !isFirstLoad) {
                     triggerCelebration();
                     animateCelebration();
                 }
+
+                isFirstLoad = false;
             }
 
             function timeAgo(date) {
                 const seconds = Math.floor((new Date() - date) / 1000);
-                
+
                 if (seconds < 60) return 'just now';
                 if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
                 if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
                 if (seconds < 2592000) return Math.floor(seconds / 86400) + 'd ago';
                 if (seconds < 31536000) return Math.floor(seconds / 2592000) + 'mo ago';
                 return Math.floor(seconds / 31536000) + 'y ago';
+            }
+
+            function updateSupplyStats(burnedAmount) {
+                // Estimate DOGE Supply
+                // 2024 Base: ~143B. Increases ~5B/year (~10k per minute)
+                const now = new Date();
+                const baseDate = new Date('2024-01-01T00:00:00Z');
+                const secondsSinceBase = (now - baseDate) / 1000;
+                const coinsPerSecond = 10000 / 60; // 10k per block (1 min)
+                const baseSupply = 142400000000;
+
+                const currentSupply = baseSupply + (secondsSinceBase * coinsPerSecond);
+
+                const percent = (burnedAmount / currentSupply) * 100;
+
+                // Update DOM
+                document.getElementById('supply-percent').innerText = percent.toFixed(8) + '%';
+                document.getElementById('progress-fill').style.width = Math.min(percent * 10, 100) + '%'; // Scale x10 for visibility if needed, or keeping accurate?
+                // Actually keep it accurate but visual representation might need help if it's very small.
+                // 1.8B / 144B is > 1%. It will be visible.
+
+                document.getElementById('progress-fill').style.width = percent + '%';
+
+                document.getElementById('supply-burned').innerText = (burnedAmount / 1000000000).toFixed(4) + 'B Burned';
+                document.getElementById('supply-total').innerText = 'Total: ' + (currentSupply / 1000000000).toFixed(2) + 'B';
             }
 
             // Initial fetch
