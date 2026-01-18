@@ -14,6 +14,105 @@ document.addEventListener('DOMContentLoaded', () => {
     let lastKnownBalance = 0;
     let knownTxHashes = new Set();
     let isFirstLoad = true;
+    let dogePrice = 0;
+
+    // Mouse Interaction
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    // ═══════════════════════════════════════════════════════════════
+    // AUDIO ENGINE (Oscillators)
+    // ═══════════════════════════════════════════════════════════════
+    const audioBtn = document.getElementById('audio-btn');
+    const audioText = document.getElementById('audio-text');
+    let audioCtx = null;
+    let droneOsc = null;
+    let droneGain = null;
+    let isMuted = true;
+
+    async function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            await audioCtx.resume();
+        }
+
+        if (!droneOsc) {
+            // Create a deep "Space Drone"
+            droneOsc = audioCtx.createOscillator();
+            droneOsc.type = 'sine'; // deeply sinusoidal
+            droneOsc.frequency.setValueAtTime(55, audioCtx.currentTime); // Low A
+
+            // Add some "wobble" (LFO)
+            const lfo = audioCtx.createOscillator();
+            lfo.type = 'sine';
+            lfo.frequency.setValueAtTime(0.1, audioCtx.currentTime); // Very slow wobble
+
+            const lfoGain = audioCtx.createGain();
+            lfoGain.gain.setValueAtTime(2, audioCtx.currentTime);
+
+            lfo.connect(lfoGain);
+            lfoGain.connect(droneOsc.frequency);
+            lfo.start();
+
+            droneGain = audioCtx.createGain();
+            droneGain.gain.setValueAtTime(0, audioCtx.currentTime); // Start silent
+
+            droneOsc.connect(droneGain);
+            droneGain.connect(audioCtx.destination);
+            droneOsc.start();
+        }
+    }
+
+    function toggleAudio() {
+        if (isMuted) {
+            initAudio().then(() => {
+                // Fade In
+                droneGain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 2);
+                audioText.innerText = "Sound On";
+                document.querySelector('.audio-icon').innerText = "🔊";
+                audioBtn.classList.add('active');
+                isMuted = false;
+            });
+        } else {
+            // Fade Out
+            if (droneGain) {
+                droneGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
+            }
+            audioText.innerText = "Sound Off";
+            document.querySelector('.audio-icon').innerText = "🔇";
+            audioBtn.classList.remove('active');
+            isMuted = true;
+        }
+    }
+
+    function playBurnSound() {
+        if (isMuted || !audioCtx) return;
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'triangle';
+        // Pitch drop effect
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 1);
+
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.2);
+    }
+
+    audioBtn.addEventListener('click', toggleAudio);
 
     // ═══════════════════════════════════════════════════════════════
     // STARFIELD BACKGROUND
@@ -131,6 +230,22 @@ document.addEventListener('DOMContentLoaded', () => {
             // Spiral inward
             p.distance -= p.speed;
             p.angle += (0.02 + (200 - p.distance) * 0.0003);
+
+            // Mouse Interaction (Gravitational Lensing)
+            // Calculate vector from particle to mouse (relative to center)
+            // Center is 200,200. Mouse needs to be mapped to canvas space.
+            const rect = bhCanvas.getBoundingClientRect();
+            const relMouseX = (mouseX - rect.left) * (400 / rect.width);
+            const relMouseY = (mouseY - rect.top) * (400 / rect.height);
+            
+            const dx = p.x - relMouseX;
+            const dy = p.y - relMouseY;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            
+            if (dist < 100) {
+                const force = (100 - dist) / 500;
+                p.angle += force; // Spin faster near mouse/disturbance
+            }
 
             p.x = 200 + Math.cos(p.angle) * p.distance;
             p.y = 200 + Math.sin(p.angle) * p.distance;
@@ -296,6 +411,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function fetchAddressData() {
+        // Fetch Price First (independent)
+        fetchDogePrice();
+
         try {
             // Using BlockCypher for detailed data
             const controller = new AbortController();
@@ -349,6 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`New burn detected! +${diff} DOGE`);
 
             // Trigger celebration
+            playBurnSound();
             triggerCelebration();
             animateCelebration();
 
@@ -364,6 +483,8 @@ document.addEventListener('DOMContentLoaded', () => {
         lastKnownBalance = balance;
         balanceDisplay.innerText = `${formatted} DOGE`;
         totalBurnedEl.innerText = `${formatted}`;
+        
+        updateUsdValue(balance);
 
         // Update Supply Stats
         updateSupplyStats(balance);
@@ -463,6 +584,29 @@ document.addEventListener('DOMContentLoaded', () => {
         if (seconds < 2592000) return Math.floor(seconds / 86400) + 'd ago';
         if (seconds < 31536000) return Math.floor(seconds / 2592000) + 'mo ago';
         return Math.floor(seconds / 31536000) + 'y ago';
+    }
+
+    async function fetchDogePrice() {
+        try {
+            const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=dogecoin&vs_currencies=usd');
+            const data = await res.json();
+            if (data.dogecoin && data.dogecoin.usd) {
+                dogePrice = data.dogecoin.usd;
+                if (lastKnownBalance > 0) {
+                    updateUsdValue(lastKnownBalance);
+                }
+            }
+        } catch (e) {
+            console.warn("Failed to fetch price:", e);
+        }
+    }
+
+    function updateUsdValue(balance) {
+        if (dogePrice > 0) {
+            const val = balance * dogePrice;
+            const formatted = val.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+            document.getElementById('total-value-usd').innerText = `${formatted} Lost`;
+        }
     }
 
     function updateSupplyStats(burnedAmount) {

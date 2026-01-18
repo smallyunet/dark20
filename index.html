@@ -107,11 +107,17 @@ Probability = 1 / 58^34 (Thermodynamically Impossible)
     <section class="container black-hole">
         <h2>The Black Hole</h2>
         <p style="color: var(--dim-color); font-size: 0.9rem;">Send DOGE to this address to burn it forever.</p>
+        
+        <!-- Audio Control -->
+        <button id="audio-btn" class="audio-btn" aria-label="Toggle Sound">
+            <span class="audio-icon">🔇</span> <span id="audio-text">Sound Off</span>
+        </button>
 
         <!-- Stats Grid -->
         <div class="stats-grid">
             <div class="stat-card">
                 <span class="stat-value" id="total-burned">---</span>
+                <span class="stat-sub-value" id="total-value-usd">$0.00 Lost</span>
                 <span class="stat-label">Mass Absorbed</span>
             </div>
             <div class="stat-card">

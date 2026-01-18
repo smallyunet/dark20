@@ -1,4 +1,4 @@
-# DARK-20
+# DARK-20 v0.0.2
 
 > "Dogecoin is infinite. Kabosu is not."
 
@@ -9,6 +9,7 @@
 This is a single-page digital experience designed to facilitate the voluntary burning of Dogecoin as a form of respect.
 
 - **Status**: Active / Immutable
+- **Version**: v0.0.2 (Audioscape + Live Value)
 - **Roadmap**: NONE.
 - **Token Sale**: NEVER.
 - **Profit**: 0.

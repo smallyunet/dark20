@@ -436,6 +436,44 @@ section:last-of-type {
     letter-spacing: 0.1rem;
 }
 
+.stat-sub-value {
+    font-size: 0.85rem;
+    color: var(--dim-color);
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: monospace;
+}
+
+/* Audio Control */
+.audio-btn {
+    background: transparent;
+    border: 1px solid var(--dim-color);
+    color: var(--dim-color);
+    padding: 0.5rem 1rem;
+    margin: 1rem auto;
+    font-family: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.audio-btn:hover {
+    border-color: var(--glow-cyan);
+    color: var(--glow-cyan);
+    box-shadow: 0 0 10px rgba(0, 255, 249, 0.2);
+}
+
+.audio-btn.active {
+    border-color: var(--glow-cyan);
+    color: var(--glow-cyan);
+    box-shadow: 0 0 15px rgba(0, 255, 249, 0.3);
+}
+
 /* Black Hole (Action) */
 .burn-address-container {
     margin: 2rem 0;
