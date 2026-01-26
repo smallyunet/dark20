@@ -537,6 +537,13 @@ section:last-of-type {
     font-size: 0.9rem;
 }
 
+.last-sync {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--dim-color);
+}
+
 .balance-value {
     color: var(--text-color);
     font-size: 2rem;
@@ -860,6 +867,24 @@ footer {
 .toast.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Keep canvases from constantly repainting via JS (JS also guards) */
+    #starfield,
+    #celebration-canvas,
+    #blackhole-canvas {
+        opacity: 0.85;
+    }
 }
 
 /* Custom Scrollbar */

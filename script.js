@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const balanceDisplay = document.getElementById('balance-display');
     const statusDot = document.getElementById('status-dot');
     const statusText = document.getElementById('status-text');
+    const lastSyncEl = document.getElementById('last-sync');
     const txList = document.getElementById('tx-list');
     const totalBurnedEl = document.getElementById('total-burned');
     const totalTxsEl = document.getElementById('total-txs');
@@ -15,6 +16,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let knownTxHashes = new Set();
     let isFirstLoad = true;
     let dogePrice = 0;
+    let isFetching = false;
+
+    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let prefersReducedMotion = reducedMotionQuery.matches;
+
+    let starfieldAnimating = false;
+    let blackholeAnimating = false;
+
+    // Reduced-motion change handler is registered later (after canvas contexts exist).
 
     // Mouse Interaction
     let mouseX = window.innerWidth / 2;
@@ -127,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         starfieldCanvas.height = window.innerHeight * dpr;
         starfieldCanvas.style.width = window.innerWidth + 'px';
         starfieldCanvas.style.height = window.innerHeight + 'px';
-        starfieldCtx.scale(dpr, dpr);
+        starfieldCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
         
         stars = [];
         const numStars = Math.floor((window.innerWidth * window.innerHeight) / 8000);
@@ -145,6 +155,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animateStarfield() {
+        if (prefersReducedMotion) {
+            starfieldAnimating = false;
+            return;
+        }
         starfieldCtx.fillStyle = '#050505';
         starfieldCtx.fillRect(0, 0, window.innerWidth, window.innerHeight); // Use logical size for rect
 
@@ -179,9 +193,36 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(animateStarfield);
     }
 
+    function startStarfield() {
+        if (prefersReducedMotion || starfieldAnimating) return;
+        starfieldAnimating = true;
+        requestAnimationFrame(animateStarfield);
+    }
+
+    function renderStaticStarfield() {
+        starfieldCtx.fillStyle = '#050505';
+        starfieldCtx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+
+        stars.forEach(star => {
+            starfieldCtx.beginPath();
+            starfieldCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            starfieldCtx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+            starfieldCtx.fill();
+        });
+    }
+
     initStarfield();
-    animateStarfield();
-    window.addEventListener('resize', initStarfield);
+    if (prefersReducedMotion) {
+        renderStaticStarfield();
+    } else {
+        startStarfield();
+    }
+    window.addEventListener('resize', () => {
+        initStarfield();
+        if (prefersReducedMotion) {
+            renderStaticStarfield();
+        }
+    });
 
     // ═══════════════════════════════════════════════════════════════
     // BLACK HOLE PARTICLE ABSORPTION
@@ -197,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bhCanvas.height = 400 * dpr;
         bhCanvas.style.width = '400px';
         bhCanvas.style.height = '400px';
-        bhCtx.scale(dpr, dpr);
+        bhCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
     function createParticle() {
@@ -218,6 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animateBlackhole() {
+        if (prefersReducedMotion) {
+            blackholeAnimating = false;
+            return;
+        }
         bhCtx.clearRect(0, 0, 400, 400); // Clear logical area
 
         // Add new particles
@@ -272,8 +317,16 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(animateBlackhole);
     }
 
+    function startBlackhole() {
+        if (prefersReducedMotion || blackholeAnimating) return;
+        blackholeAnimating = true;
+        requestAnimationFrame(animateBlackhole);
+    }
+
     initBlackhole();
-    animateBlackhole();
+    if (!prefersReducedMotion) {
+        startBlackhole();
+    }
 
     // ═══════════════════════════════════════════════════════════════
     // CELEBRATION PARTICLES (BIG BANG)
@@ -288,10 +341,11 @@ document.addEventListener('DOMContentLoaded', () => {
         celebCanvas.height = window.innerHeight * dpr;
         celebCanvas.style.width = window.innerWidth + 'px';
         celebCanvas.style.height = window.innerHeight + 'px';
-        celebCtx.scale(dpr, dpr);
+        celebCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
     function triggerCelebration() {
+        if (prefersReducedMotion) return;
         const centerX = window.innerWidth / 2;
         const centerY = window.innerHeight / 2; // Center of screen/blackhole
 
@@ -315,6 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function animateCelebration() {
+        if (prefersReducedMotion) return;
         celebCtx.clearRect(0, 0, window.innerWidth, window.innerHeight); // Use logical
 
         celebParticles = celebParticles.filter(p => {
@@ -347,6 +402,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initCelebration();
     window.addEventListener('resize', initCelebration);
+
+    // Register prefers-reduced-motion change handler now that canvases exist.
+    const onReducedMotionChange = (e) => {
+        prefersReducedMotion = !!e.matches;
+
+        if (prefersReducedMotion) {
+            initStarfield();
+            renderStaticStarfield();
+            bhCtx.clearRect(0, 0, 400, 400);
+            celebCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        } else {
+            initStarfield();
+            startStarfield();
+            initBlackhole();
+            startBlackhole();
+        }
+    };
+
+    if (typeof reducedMotionQuery.addEventListener === 'function') {
+        reducedMotionQuery.addEventListener('change', onReducedMotionChange);
+    } else if (typeof reducedMotionQuery.addListener === 'function') {
+        reducedMotionQuery.addListener(onReducedMotionChange);
+    }
 
     // ═══════════════════════════════════════════════════════════════
     // COPY FUNCTIONALITY
@@ -397,6 +475,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const CACHE_KEY = 'dark20_doge_balance';
     const TX_CACHE_KEY = 'dark20_doge_txs';
 
+    function setLastSyncLabel(date, sourceLabel = 'Network') {
+        if (!lastSyncEl) return;
+        if (!(date instanceof Date) || isNaN(date.getTime())) {
+            lastSyncEl.innerText = 'Last sync: —';
+            return;
+        }
+
+        const time = date.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        lastSyncEl.innerText = `Last sync: ${time} (${sourceLabel})`;
+    }
+
+    function renderCachedTransactions(cached) {
+        if (!Array.isArray(cached) || cached.length === 0) return;
+
+        let html = '';
+        cached.forEach(tx => {
+            if (!tx || typeof tx.tx_hash !== 'string') return;
+            const amount = (Number(tx.value) / 100000000).toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4
+            });
+            const confirmed = tx.confirmed ? new Date(tx.confirmed) : null;
+            const time = confirmed && !isNaN(confirmed.getTime()) ? timeAgo(confirmed) : '—';
+            const hashShort = tx.tx_hash.substring(0, 8) + '...' + tx.tx_hash.substring(tx.tx_hash.length - 6);
+
+            knownTxHashes.add(tx.tx_hash);
+            html += `
+                <div class="tx-item">
+                    <div>
+                        <span class="tx-amount">${amount} DOGE</span>
+                        <span class="tx-message"> entered the void</span>
+                        <div class="tx-hash">
+                            <a href="https://dogechain.info/tx/${tx.tx_hash}" target="_blank" rel="noopener">${hashShort}</a>
+                        </div>
+                    </div>
+                    <span class="tx-time">${time}</span>
+                </div>
+            `;
+        });
+
+        if (html.trim().length > 0) {
+            txList.innerHTML = html;
+        }
+    }
+
     // Load Cache Immediately
     const cachedBalance = localStorage.getItem(CACHE_KEY);
     if (cachedBalance) {
@@ -407,10 +534,30 @@ document.addEventListener('DOMContentLoaded', () => {
             balanceDisplay.innerText = `${formatted} DOGE`;
             totalBurnedEl.innerText = `${formatted}`;
             statusText.innerText = "Synchronizing Node...";
+            setLastSyncLabel(new Date(), 'Cache');
+        }
+    }
+
+    // Render cached transmissions immediately (v0.0.3)
+    const cachedTxs = localStorage.getItem(TX_CACHE_KEY);
+    if (cachedTxs) {
+        try {
+            const parsed = JSON.parse(cachedTxs);
+            if (parsed && Array.isArray(parsed.txs)) {
+                renderCachedTransactions(parsed.txs);
+                if (typeof parsed.ts === 'number' && isFinite(parsed.ts)) {
+                    setLastSyncLabel(new Date(parsed.ts), 'Cache');
+                }
+            }
+        } catch (_) {
+            // ignore corrupt cache
         }
     }
 
     async function fetchAddressData() {
+        if (isFetching) return;
+        isFetching = true;
+
         // Fetch Price First (independent)
         fetchDogePrice();
 
@@ -441,6 +588,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateTransactions(data.txrefs);
             }
 
+            setLastSyncLabel(new Date(), 'Network');
+
         } catch (e) {
             console.warn("Primary API failed, trying fallback:", e);
             // Fallback to Chain.so
@@ -449,12 +598,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
                 const balance = parseFloat(data.data.confirmed_balance);
                 updateBalance(balance);
+                setLastSyncLabel(new Date(), 'Fallback');
             } catch (e2) {
                 console.warn("All APIs failed:", e2);
                 if (!statusDot.classList.contains('live')) {
                     statusText.innerText = "Network Error (Retrying...)";
                 }
             }
+        } finally {
+            isFetching = false;
         }
     }
 
@@ -566,6 +718,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         txList.innerHTML = html;
 
+        // Persist recent received txs for next load (v0.0.3)
+        try {
+            const toCache = received.slice(0, 10).map(tx => ({
+                tx_hash: tx.tx_hash,
+                value: tx.value,
+                confirmed: tx.confirmed
+            }));
+            localStorage.setItem(TX_CACHE_KEY, JSON.stringify({
+                ts: Date.now(),
+                txs: toCache
+            }));
+        } catch (_) {
+            // ignore storage errors
+        }
+
         // Trigger celebration only if new tx found AND not first load
         if (newTxFound && !isFirstLoad) {
             triggerCelebration();
@@ -624,10 +791,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update DOM
         document.getElementById('supply-percent').innerText = percent.toFixed(8) + '%';
-        document.getElementById('progress-fill').style.width = Math.min(percent * 10, 100) + '%'; // Scale x10 for visibility if needed, or keeping accurate?
-        // Actually keep it accurate but visual representation might need help if it's very small.
-        // 1.8B / 144B is > 1%. It will be visible.
-
         document.getElementById('progress-fill').style.width = percent + '%';
 
         document.getElementById('supply-burned').innerText = (burnedAmount / 1000000000).toFixed(4) + 'B Burned';
@@ -637,6 +800,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial fetch
     fetchAddressData();
 
-    // Poll every 30 seconds
-    setInterval(fetchAddressData, 30000);
+    // Poll every 30 seconds (non-overlapping)
+    async function pollLoop() {
+        await fetchAddressData();
+        setTimeout(pollLoop, 30000);
+    }
+    setTimeout(pollLoop, 30000);
 });
