@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
-        
+
         osc.type = 'triangle';
         // Pitch drop effect
         osc.frequency.setValueAtTime(800, audioCtx.currentTime);
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         starfieldCanvas.style.width = window.innerWidth + 'px';
         starfieldCanvas.style.height = window.innerHeight + 'px';
         starfieldCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        
+
         stars = [];
         const numStars = Math.floor((window.innerWidth * window.innerHeight) / 8000);
 
@@ -168,17 +168,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 star.twinkleSpeed *= -1;
             }
 
-            // Gravity Pull Effect
+            // Gravity Pull Effect - Optimized Math
             const centerX = window.innerWidth / 2;
             const centerY = window.innerHeight / 2;
             const dx = star.x - centerX;
             const dy = star.y - centerY;
-            star.x -= dx * 0.002 * star.speed; // Pull x towards center
-            star.y -= dy * 0.002 * star.speed; // Pull y towards center
 
-            // Reset if too close to center
-            const distCheck = Math.sqrt(dx * dx + dy * dy);
-            if (distCheck < 50) {
+            // Apply gravity
+            star.x -= dx * 0.002 * star.speed;
+            star.y -= dy * 0.002 * star.speed;
+
+            // Reset if too close to center - Squared distance check
+            // 50^2 = 2500
+            if (dx * dx + dy * dy < 2500) {
                 star.x = Math.random() * window.innerWidth;
                 star.y = Math.random() * window.innerHeight;
                 star.opacity = 0;
@@ -258,6 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    const TWO_PI = Math.PI * 2;
+
     function animateBlackhole() {
         if (prefersReducedMotion) {
             blackholeAnimating = false;
@@ -265,29 +269,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         bhCtx.clearRect(0, 0, 400, 400); // Clear logical area
 
-        // Add new particles
-        if (particles.length < 50 && Math.random() > 0.9) {
+        // Optimization: Use screen blending for glowing effect without double-draw
+        // This makes overlapping particles brighter, simulating the accretion disk energy
+        bhCtx.globalCompositeOperation = 'screen';
+
+        // Add new particles (Limit increased to 150 for denser, richer effect)
+        // Spawn rate adjusted slightly to fill the void
+        if (particles.length < 150 && Math.random() > 0.8) {
             particles.push(createParticle());
         }
 
-        // Update and draw particles
-        particles = particles.filter(p => {
+        // Pre-calculate mouse relative position once per frame
+        const rect = bhCanvas.getBoundingClientRect();
+        const labelX = (mouseX - rect.left) * (400 / rect.width);
+        const labelY = (mouseY - rect.top) * (400 / rect.height);
+
+        // Usage of reverse loop is more performant for deletion (splice)
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+
             // Spiral inward
             p.distance -= p.speed;
             p.angle += (0.02 + (200 - p.distance) * 0.0003);
 
-            // Mouse Interaction (Gravitational Lensing)
-            // Calculate vector from particle to mouse (relative to center)
-            // Center is 200,200. Mouse needs to be mapped to canvas space.
-            const rect = bhCanvas.getBoundingClientRect();
-            const relMouseX = (mouseX - rect.left) * (400 / rect.width);
-            const relMouseY = (mouseY - rect.top) * (400 / rect.height);
-            
-            const dx = p.x - relMouseX;
-            const dy = p.y - relMouseY;
-            const dist = Math.sqrt(dx*dx + dy*dy);
-            
-            if (dist < 100) {
+            // Mouse Interaction (Gravitational Lensing) - Optimized Math
+            const dx = p.x - labelX;
+            const dy = p.y - labelY;
+            const distSq = dx * dx + dy * dy;
+
+            // 100^2 = 10000. Avoid sqrt unless inside range
+            if (distSq < 10000) {
+                const dist = Math.sqrt(distSq);
                 const force = (100 - dist) / 500;
                 p.angle += force; // Spin faster near mouse/disturbance
             }
@@ -295,24 +307,27 @@ document.addEventListener('DOMContentLoaded', () => {
             p.x = 200 + Math.cos(p.angle) * p.distance;
             p.y = 200 + Math.sin(p.angle) * p.distance;
 
-            if (p.distance < 30) return false; // Absorbed
+            // Absorbed by event horizon
+            if (p.distance < 30) {
+                particles.splice(i, 1);
+                continue;
+            }
 
             // Fade as approaching center
             const opacity = Math.min(1, (p.distance - 30) / 100);
 
             bhCtx.beginPath();
-            bhCtx.arc(p.x, p.y, p.size * (p.distance / 200), 0, Math.PI * 2);
+            // Optimization: Single arc call. 
+            // We use 'screen' blend + slightly larger size to simulate the glow 
+            // instead of drawing two separate arcs (core + glow).
+            const size = p.size * 1.5 * (p.distance / 200);
+            bhCtx.arc(p.x, p.y, size, 0, TWO_PI);
             bhCtx.fillStyle = p.color + opacity + ')';
             bhCtx.fill();
+        }
 
-            // Glow effect
-            bhCtx.beginPath();
-            bhCtx.arc(p.x, p.y, p.size * 2 * (p.distance / 200), 0, Math.PI * 2);
-            bhCtx.fillStyle = p.color + (opacity * 0.3) + ')';
-            bhCtx.fill();
-
-            return true;
-        });
+        // Reset blend mode for safety (though next frame clears it)
+        bhCtx.globalCompositeOperation = 'source-over';
 
         requestAnimationFrame(animateBlackhole);
     }
@@ -352,8 +367,8 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < 150; i++) {
             const angle = Math.random() * Math.PI * 2;
             // Exponential speed distribution for explosion feel
-            const speed = Math.pow(Math.random(), 3) * 20 + 2; 
-            
+            const speed = Math.pow(Math.random(), 3) * 20 + 2;
+
             celebParticles.push({
                 x: centerX,
                 y: centerY,
@@ -370,28 +385,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function animateCelebration() {
         if (prefersReducedMotion) return;
-        celebCtx.clearRect(0, 0, window.innerWidth, window.innerHeight); // Use logical
+        celebCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-        celebParticles = celebParticles.filter(p => {
+        // Optimization: Lighter blend mode for explosion effect
+        celebCtx.globalCompositeOperation = 'lighter';
+
+        // Optimization: Reverse loop + splice for efficiency
+        for (let i = celebParticles.length - 1; i >= 0; i--) {
+            const p = celebParticles[i];
+
             p.x += p.vx;
             p.y += p.vy;
-            
+
             // Physics
             p.vx *= p.friction;
             p.vy *= p.friction;
             p.life -= p.decay;
 
-            if (p.life <= 0) return false;
+            if (p.life <= 0) {
+                celebParticles.splice(i, 1);
+                continue;
+            }
 
             celebCtx.beginPath();
             celebCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             celebCtx.fillStyle = p.color;
             celebCtx.globalAlpha = p.life;
             celebCtx.fill();
-            celebCtx.globalAlpha = 1;
+        }
 
-            return true;
-        });
+        // Reset blend mode
+        celebCtx.globalCompositeOperation = 'source-over';
+        celebCtx.globalAlpha = 1;
 
         if (celebParticles.length > 0) {
             requestAnimationFrame(animateCelebration);
@@ -635,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lastKnownBalance = balance;
         balanceDisplay.innerText = `${formatted} DOGE`;
         totalBurnedEl.innerText = `${formatted}`;
-        
+
         updateUsdValue(balance);
 
         // Update Supply Stats
