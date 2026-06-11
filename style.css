@@ -1,7 +1,7 @@
 :root {
     --bg-color: #030306;
     --text-color: #ececf3;
-    --dim-color: #7c7e8c;
+    --dim-color: #a2a5b5;
     --accent-color: #ffffff;
     --error-color: #ff3c3c;
     --glow-cyan: #00f0ff;
@@ -249,7 +249,7 @@ section {
 }
 
 .subtitle {
-    font-size: clamp(0.85rem, 2.5vw, 1.25rem);
+    font-size: clamp(0.95rem, 2.5vw, 1.35rem);
     color: var(--dim-color);
     margin-bottom: 2rem;
     letter-spacing: 0.4rem;
@@ -258,7 +258,7 @@ section {
 }
 
 .tagline {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     font-family: var(--font-mono);
     border: 1px solid rgba(255, 255, 255, 0.15);
     background: rgba(255, 255, 255, 0.02);
@@ -468,13 +468,13 @@ section {
     line-height: 1.6;
     color: var(--text-color);
     margin-bottom: 1.2rem !important;
-    opacity: 0.9;
+    opacity: 0.95;
     max-width: 100%;
 }
 
 .memorial-sub {
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-style: italic;
     color: var(--dim-color);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -508,7 +508,7 @@ section {
     color: #a0a5c0;
     text-align: left;
     margin-bottom: 1.5rem;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     font-family: var(--font-mono);
     box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(0, 240, 255, 0.02);
     position: relative;
@@ -608,7 +608,7 @@ section {
 }
 
 .stat-label {
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: var(--dim-color);
     text-transform: uppercase;
     letter-spacing: 0.12rem;
@@ -616,7 +616,7 @@ section {
 }
 
 .stat-sub-value {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--glow-cyan);
     display: block;
     margin-bottom: 0.5rem;
@@ -633,7 +633,7 @@ section {
     padding: 0.6rem 1.2rem;
     margin: 1rem auto 2.5rem auto;
     font-family: var(--font-mono);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     cursor: pointer;
     text-transform: uppercase;
     transition: all 0.25s ease;
@@ -707,7 +707,7 @@ section {
     font-weight: 600;
     cursor: pointer;
     text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     letter-spacing: 1.5px;
     transition: all 0.25s ease;
     text-decoration: none;
@@ -789,7 +789,7 @@ section {
     align-items: center;
     font-family: var(--font-mono);
     font-weight: bold;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     border-left: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -812,7 +812,7 @@ section {
 }
 
 .calc-label {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--dim-color);
     font-family: var(--font-sans);
 }
@@ -838,7 +838,7 @@ section {
 .counter {
     margin-top: 3rem;
     color: var(--dim-color);
-    font-size: 0.9rem;
+    font-size: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     padding-top: 2rem;
 }
@@ -846,7 +846,7 @@ section {
 .last-sync {
     display: block;
     margin-top: 0.5rem;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: var(--dim-color);
     font-family: var(--font-mono);
 }
@@ -909,7 +909,7 @@ section {
 }
 
 .tx-history h3 {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--dim-color);
     margin-bottom: 1rem;
     text-align: center;
@@ -931,7 +931,7 @@ section {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     transition: background 0.25s ease;
     font-family: var(--font-mono);
 }
@@ -984,12 +984,12 @@ section {
 
 .tx-time {
     color: var(--dim-color);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
 }
 
 .tx-hash {
     color: var(--dim-color);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     margin-top: 0.25rem;
 }
 
@@ -1008,8 +1008,8 @@ section {
 .tx-message {
     color: var(--dim-color);
     font-style: normal;
-    font-size: 0.8rem;
-    opacity: 0.8;
+    font-size: 0.9rem;
+    opacity: 0.85;
 }
 
 /* Supply Progress Bar */
@@ -1027,7 +1027,7 @@ section {
 .supply-label {
     display: flex;
     justify-content: space-between;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     color: var(--dim-color);
     margin-bottom: 0.6rem;
     text-transform: uppercase;
@@ -1070,7 +1070,7 @@ section {
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 6px;
     color: var(--dim-color);
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     margin: 1rem 0;
     font-family: var(--font-mono);
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.7);
@@ -1079,7 +1079,7 @@ section {
 .verify-link {
     color: var(--glow-cyan);
     text-decoration: none;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     transition: all 0.2s ease;
     border-bottom: 1px dotted var(--glow-cyan);
 }
@@ -1106,7 +1106,7 @@ footer {
     padding: 5rem 1rem 4rem 1rem;
     text-align: center;
     border-top: 1px solid rgba(255, 255, 255, 0.04);
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     color: var(--dim-color);
     margin-top: auto;
     background: rgba(4, 4, 8, 0.4);
@@ -1135,7 +1135,7 @@ footer {
     }
 
     .mechanism pre {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         padding: 1rem;
     }
 
@@ -1144,7 +1144,7 @@ footer {
     }
 
     .burn-address {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         padding: 0.8rem;
     }
 
@@ -1223,7 +1223,7 @@ footer {
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     pointer-events: none;
     font-family: monospace;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     z-index: 100;
     white-space: nowrap;
     max-width: 90vw;
