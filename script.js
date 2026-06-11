@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isFirstLoad = true;
     let dogePrice = 0;
     let isFetching = false;
+    let currentDogeSupply = 144600000000; // estimated fallback supply
 
     const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     let prefersReducedMotion = reducedMotionQuery.matches;
@@ -246,87 +247,92 @@ document.addEventListener('DOMContentLoaded', () => {
     function createParticle() {
         const angle = Math.random() * Math.PI * 2;
         const distance = 180 + Math.random() * 50;
+        const startX = 200 + Math.cos(angle) * distance;
+        const startY = 200 + Math.sin(angle) * distance;
         return {
-            // Logic relative to center 200,200
-            x: 200 + Math.cos(angle) * distance,
-            y: 200 + Math.sin(angle) * distance,
+            x: startX,
+            y: startY,
+            px: startX, // previous X for motion-blur vector line
+            py: startY, // previous Y for motion-blur vector line
             angle: angle,
             distance: distance,
-            speed: 0.3 + Math.random() * 0.5,
-            size: 1 + Math.random() * 2,
-            color: Math.random() > 0.5 ?
-                `rgba(255, ${150 + Math.random() * 100}, 50, ` :
-                `rgba(${200 + Math.random() * 55}, ${200 + Math.random() * 55}, 255, `
+            speed: 0.4 + Math.random() * 0.6,
+            size: 0.8 + Math.random() * 1.8
         };
     }
-
-    const TWO_PI = Math.PI * 2;
 
     function animateBlackhole() {
         if (prefersReducedMotion) {
             blackholeAnimating = false;
             return;
         }
-        bhCtx.clearRect(0, 0, 400, 400); // Clear logical area
+        bhCtx.clearRect(0, 0, 400, 400);
 
-        // Optimization: Use screen blending for glowing effect without double-draw
-        // This makes overlapping particles brighter, simulating the accretion disk energy
         bhCtx.globalCompositeOperation = 'screen';
 
-        // Add new particles (Limit increased to 150 for denser, richer effect)
-        // Spawn rate adjusted slightly to fill the void
-        if (particles.length < 150 && Math.random() > 0.8) {
+        if (particles.length < 180 && Math.random() > 0.6) {
             particles.push(createParticle());
         }
 
-        // Pre-calculate mouse relative position once per frame
         const rect = bhCanvas.getBoundingClientRect();
         const labelX = (mouseX - rect.left) * (400 / rect.width);
         const labelY = (mouseY - rect.top) * (400 / rect.height);
 
-        // Usage of reverse loop is more performant for deletion (splice)
         for (let i = particles.length - 1; i >= 0; i--) {
             const p = particles[i];
 
-            // Spiral inward
-            p.distance -= p.speed;
-            p.angle += (0.02 + (200 - p.distance) * 0.0003);
+            p.px = p.x;
+            p.py = p.y;
 
-            // Mouse Interaction (Gravitational Lensing) - Optimized Math
+            p.distance -= p.speed;
+            p.angle += (0.022 + (200 - p.distance) * 0.00035);
+
             const dx = p.x - labelX;
             const dy = p.y - labelY;
             const distSq = dx * dx + dy * dy;
 
-            // 100^2 = 10000. Avoid sqrt unless inside range
             if (distSq < 10000) {
                 const dist = Math.sqrt(distSq);
-                const force = (100 - dist) / 500;
-                p.angle += force; // Spin faster near mouse/disturbance
+                const force = (100 - dist) / 450;
+                p.angle += force;
             }
 
             p.x = 200 + Math.cos(p.angle) * p.distance;
             p.y = 200 + Math.sin(p.angle) * p.distance;
 
-            // Absorbed by event horizon
             if (p.distance < 30) {
                 particles.splice(i, 1);
                 continue;
             }
 
-            // Fade as approaching center
             const opacity = Math.min(1, (p.distance - 30) / 100);
 
+            // Dynamic color shift: Outer orange-red (cooling) -> inner cyan-white (hot/supercharged)
+            let r, g, b;
+            if (p.distance < 75) {
+                // Inner region: hot cyan/white glow
+                const t = (p.distance - 30) / 45; // 0 to 1
+                r = Math.floor(60 + t * 195);
+                g = Math.floor(220 + t * 35);
+                b = 255;
+            } else {
+                // Outer region: solar gold/orange
+                const t = Math.min(1, (p.distance - 75) / 150); // 0 to 1
+                r = 255;
+                g = Math.floor(210 - t * 110);
+                b = Math.floor(60 - t * 60);
+            }
+
             bhCtx.beginPath();
-            // Optimization: Single arc call. 
-            // We use 'screen' blend + slightly larger size to simulate the glow 
-            // instead of drawing two separate arcs (core + glow).
-            const size = p.size * 1.5 * (p.distance / 200);
-            bhCtx.arc(p.x, p.y, size, 0, TWO_PI);
-            bhCtx.fillStyle = p.color + opacity + ')';
-            bhCtx.fill();
+            // Draw vector line (motion blur trail) proportional to distance/velocity
+            bhCtx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            bhCtx.lineWidth = p.size * (p.distance / 200) * 1.5;
+            bhCtx.lineCap = 'round';
+            bhCtx.moveTo(p.px, p.py);
+            bhCtx.lineTo(p.x, p.y);
+            bhCtx.stroke();
         }
 
-        // Reset blend mode for safety (though next frame clears it)
         bhCtx.globalCompositeOperation = 'source-over';
 
         requestAnimationFrame(animateBlackhole);
@@ -717,7 +723,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // But for the "new-tx" class, we only apply it if !isFirstLoad
 
         received.forEach((tx, index) => {
-            const amount = (tx.value / 100000000).toLocaleString('en-US', {
+            const dogeValue = tx.value / 100000000;
+            const amount = dogeValue.toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 4
             });
@@ -727,8 +734,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const isNew = !knownTxHashes.has(tx.tx_hash) && !isFirstLoad;
             knownTxHashes.add(tx.tx_hash);
 
+            let tierClass = '';
+            if (dogeValue >= 100000) {
+                tierClass = 'mega-burn';
+            } else if (dogeValue >= 1000) {
+                tierClass = 'whale-burn';
+            }
+
             html += `
-                <div class="tx-item ${isNew ? 'new-tx' : ''}">
+                <div class="tx-item ${isNew ? 'new-tx' : ''} ${tierClass}">
                     <div>
                         <span class="tx-amount">${amount} DOGE</span>
                         <span class="tx-message"> entered the void</span>
@@ -787,6 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (lastKnownBalance > 0) {
                     updateUsdValue(lastKnownBalance);
                 }
+                updateCalculator();
             }
         } catch (e) {
             console.warn("Failed to fetch price:", e);
@@ -810,16 +825,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const coinsPerSecond = 10000 / 60; // 10k per block (1 min)
         const baseSupply = 142400000000;
 
-        const currentSupply = baseSupply + (secondsSinceBase * coinsPerSecond);
+        currentDogeSupply = baseSupply + (secondsSinceBase * coinsPerSecond);
 
-        const percent = (burnedAmount / currentSupply) * 100;
+        const percent = (burnedAmount / currentDogeSupply) * 100;
 
         // Update DOM
         document.getElementById('supply-percent').innerText = percent.toFixed(8) + '%';
         document.getElementById('progress-fill').style.width = percent + '%';
 
         document.getElementById('supply-burned').innerText = (burnedAmount / 1000000000).toFixed(4) + 'B Burned';
-        document.getElementById('supply-total').innerText = 'Total: ' + (currentSupply / 1000000000).toFixed(2) + 'B';
+        document.getElementById('supply-total').innerText = 'Total: ' + (currentDogeSupply / 1000000000).toFixed(2) + 'B';
+
+        updateCalculator();
     }
 
     // Initial fetch
@@ -831,4 +848,41 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(pollLoop, 30000);
     }
     setTimeout(pollLoop, 30000);
+
+    // ═══════════════════════════════════════════════════════════════
+    // INTERACTIVE BURN CALCULATOR
+    // ═══════════════════════════════════════════════════════════════
+    const calcInput = document.getElementById('calc-amount');
+    const calcPctEl = document.getElementById('calc-pct');
+    const calcUsdEl = document.getElementById('calc-usd');
+    const calcWarpEl = document.getElementById('calc-warp');
+
+    function updateCalculator() {
+        if (!calcInput || !calcPctEl || !calcUsdEl || !calcWarpEl) return;
+        const amount = parseFloat(calcInput.value) || 0;
+        
+        // Supply reduction %
+        const supply = currentDogeSupply || 144600000000;
+        const pct = (amount / supply) * 100;
+        calcPctEl.innerText = pct.toFixed(8) + '%';
+
+        // USD value
+        if (dogePrice > 0) {
+            calcUsdEl.innerText = (amount * dogePrice).toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            });
+        } else {
+            calcUsdEl.innerText = '$' + (amount * 0.15).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' (est.)';
+        }
+
+        // Singularity expansion warp factor (mock physics)
+        const totalBurned = lastKnownBalance || 100000000;
+        const expansion = 1 + (amount / totalBurned);
+        calcWarpEl.innerText = expansion.toFixed(7) + 'x';
+    }
+
+    if (calcInput) {
+        calcInput.addEventListener('input', updateCalculator);
+    }
 });

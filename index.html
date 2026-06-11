@@ -7,10 +7,10 @@
     <title>DARK-DOGE | The Final Protocol</title>
     <meta name="description"
         content="A digital monument to Kabosu. Send Dogecoin to the void - a cryptographically derived, unspendable burn address.">
-    <!-- Google Fonts: Space Mono for Cyberpunk aesthetic -->
+    <!-- Google Fonts: Space Mono and Outfit for tech and modern sci-fi look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
         rel="stylesheet">
 
     <!-- Open Graph / Social -->
@@ -73,9 +73,18 @@
     </div>
 
     <section class="container manifesto">
-        <p>Value is not created by printing. It is forged by destruction.</p>
-        <p>This is the <strong>Event Horizon</strong> of Dogecoin. A one-way entropy engine. No keys. No return. Just
-            the endless, beautiful void.</p>
+        <div class="memorial-card">
+            <div class="memorial-glow"></div>
+            <div class="memorial-header">MEMORIAL FOR KABOSU (2005 - 2024)</div>
+            <p class="memorial-text">
+                Dogecoin is infinite, but the life of its inspiration was not. This protocol stands as a digital monument to Kabosu, the Shiba Inu who united millions with her gentle smile. By sending DOGE to the event horizon, we cryptographically freeze value forever—creating a permanent, verifiable memorial to her legacy.
+            </p>
+            <div class="memorial-sub">"May her memory burn brighter than the stars in the void."</div>
+        </div>
+        <div class="manifesto-content">
+            <p>Value is not created by printing. It is forged by destruction.</p>
+            <p>This is the <strong>Event Horizon</strong> of Dogecoin. A one-way entropy engine. No keys. No return. Just the endless, beautiful void.</p>
+        </div>
     </section>
 
     <section class="container mechanism">
@@ -142,6 +151,32 @@ Probability = 1 / 58^34 (Thermodynamically Impossible)
             <div id="qr-container" style="display: none; margin-top: 1rem; text-align: center;">
                 <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=DDogepartyxxxxxxxxxxxxxxxxxxw1dfzr"
                     alt="Doge Burn QR" style="border: 2px solid #333; padding: 5px; background: #fff;">
+            </div>
+        </div>
+
+        <!-- Interactive Burn Calculator -->
+        <div class="calculator-panel">
+            <h3>━━━ GRAVITATIONAL IMPACT CALCULATOR ━━━</h3>
+            <p style="color: var(--dim-color); font-size: 0.8rem; margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                Enter a hypothetical burn amount to estimate the singularity warp metrics.
+            </p>
+            <div class="calc-input-group">
+                <input type="number" id="calc-amount" placeholder="Enter DOGE amount" min="1" value="1000">
+                <span class="calc-unit">DOGE</span>
+            </div>
+            <div class="calc-results">
+                <div class="calc-row">
+                    <span class="calc-label">Supply Reduction:</span>
+                    <span id="calc-pct" class="calc-val">0.00000000%</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">Est. Value (USD):</span>
+                    <span id="calc-usd" class="calc-val">$0.00</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">Event Horizon Expansion:</span>
+                    <span id="calc-warp" class="calc-val">1.0000000x</span>
+                </div>
             </div>
         </div>
 

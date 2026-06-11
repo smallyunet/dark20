@@ -1,41 +1,46 @@
-# DARK-20 v0.0.3
+# DARK-DOGE | The Singularity Protocol
 
 > "Dogecoin is infinite. Kabosu is not."
 
-**Dark-20** is a behavioral art piece and a digital monument. It rejects the infinite inflation of Dogecoin by creating a thermodynamic "Black Hole" — a cryptographically derived, unspendable address where value engages in the purest form of consensus: Loss.
+**DARK-DOGE (The Doge Singularity)** is a digital monument and a cryptographic art piece. It rejects the infinite inflation of Dogecoin by directing value into a thermodynamic "Black Hole" — a mathematically derived, unspendable burn address where assets engage in the absolute form of consensus: Verifiable Loss.
 
-## The Protocol
+This project serves as a permanent memorial to Kabosu (2005 - 2024), the Shiba Inu who inspired a global movement. 
 
-This is a single-page digital experience designed to facilitate the voluntary burning of Dogecoin as a form of respect.
+---
 
-- **Status**: Active / Immutable
-- **Version**: v0.0.3 (Caching + Reduced Motion + Robust Polling)
-- **Roadmap**: NONE.
-- **Token Sale**: NEVER.
-- **Profit**: 0.
+## The Singularity
 
-### The Black Hole
-**Address:** `DDogepartyxxxxxxxxxxxxxxxxxxw1dfzr`
+The protocol functions as a live telemetry dashboard monitoring the Event Horizon of Dogecoin:
 
-This is the historic "Dogeparty" burn address.
-- **Keys**: None.
-- **Burned**: > 1.8 Billion DOGE.
-- **Status**: Infinite Void.
+- **Void Destination**: `DDogepartyxxxxxxxxxxxxxxxxxxw1dfzr` (Historical Dogeparty Burn Address)
+- **Private Keys**: Non-existent / Cryptographically Unsolvable (1 in $58^{34}$ probability)
+- **Entropy Law**: $\Delta S = +\infty$ (Irreversible state change)
+- **Gibbs Energy**: $\Delta G = -\infty$ (Spontaneous value destruction)
 
-### Running Locally
+Every transaction sent to this address represents an irreversible conversion of capital into a permanent monument of tribute.
 
-Simply open `index.html` in your browser.
+---
+
+## Features
+
+- **Relativistic Accretion Disk**: High-fidelity CSS 3D accretion disks and interactive canvas particle physics representing matter falling into the event horizon.
+- **Warp Telemetry**: Real-time balance synchronization, dollar value tracking, and transaction tier logging.
+- **Impact Calculator**: Live estimation of supply reduction metrics, estimated USD valuations, and event horizon expansion ratios based on live market pricing.
+- **Space Drone Synthesizer**: Low-frequency space drone oscillator engine providing deep audio immersion.
+
+---
+
+## Running Locally
+
+To run the telemetry deck locally, use any standard HTTP server:
 
 ```bash
-open index.html
+# Example using Python 3
+python3 -m http.server 8080
 ```
+Then navigate to `http://localhost:8080` in your web browser.
 
-## Changelog
-
-- **v0.0.3**
-	- Renders cached transmissions immediately on load.
-	- Prevents overlapping network polls; adds “Last sync” label.
-	- Respects `prefers-reduced-motion` to reduce CPU/battery usage.
+---
 
 ## License
 
